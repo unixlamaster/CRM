@@ -1,0 +1,2 @@
+module ClientPostsHelper
+end

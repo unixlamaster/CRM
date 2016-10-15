@@ -1,0 +1,12 @@
+<% @services.each do |serv| %>
+int Gi0/2.<%= serv.vlan %>
+ encapsulation dot1Q <%= serv.vlan %>
+ ip address <%= IPAddr.new((IPAddr.new serv.ipaddr.chomp).to_i+1,Socket::AF_INET).to_s %> <%= (IPAddr.new serv.ipaddr.chomp).inspect.split(/[\/>]/)[1] %>
+ ip nat inside
+ ip helper-address 194.190.110.245
+<% if serv.speed.to_i > 0 %>
+ rate-limit input <%= serv.speed.to_i * 1000 %> <%= (serv.speed.to_i * 1000 * 1.5 / 8).to_i %> <%= serv.speed.to_i * 1000 * 2 / 8 %> conform-action transmit exceed-action drop
+ rate-limit output <%= serv.speed.to_i * 1000 %> <%= (serv.speed.to_i * 1000 * 1.5 / 8).to_i %> <%= serv.speed.to_i * 1000 * 2 / 8 %> conform-action transmit exceed-action drop
+<% end %>
+exit
+<% end %>

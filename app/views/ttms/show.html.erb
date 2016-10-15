@@ -1,0 +1,91 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+      <table ><tr><td width=60%>
+        <table class=tab1>
+          <tr>
+            <td class=tab1_td1>Дата/время обращения</td>
+            <td><%= @ttm.time_create%></td>
+          </tr>
+          <tr>
+            <td class=tab1_td1>Дата/время закрытия</td>
+            <td><%=@ttm.time_change%></td>
+          </tr>
+      <%= form_for(@ttm) do |f| %> 
+          <tr>
+            <td class=tab1_td1>Статус</td>
+            <td>
+          <%= if @staff_login.admin? || @staff_login.groupid.include?(7)
+                  f.select(:status, ttms_status_hash.keys.collect {|key| [ttms_status_hash[key],key]})
+              else 
+                ttms_status_hash[@ttm.status]
+              end %>
+            </td>
+          </tr>
+         <tr><td class=tab1_td1>Характер аварии</td><td><%=@ttm.dsc%></td></tr>
+         <tr><td class=tab1_td1>Причина и методы устранения</td><td><%=@ttm.cause%></td></tr>
+         <tr><td class=tab1_td1>Вывод</td><td><%=@ttm.recap%></td></tr>
+         <tr><td colspan=2>
+           <td>
+            <%= f.submit 'Закрыть'%>&nbsp;
+            <%= hidden_field_tag "ttm[status]", "end"%>
+            <%= hidden_field_tag "ttm[cl_id]", params[:cl_id] %>
+            <%= hidden_field_tag "cl_id", params[:cl_id] %>
+           </td>
+         </tr>
+      <% end %>
+        </table>
+      </td><td rowspan=2 valign=top width=30%>
+        <table>
+        <tr><td>
+          <a class=menu1 href=# onclick="divattache.style.display='';">
+    <%= tag("img",{:src=>"/images/button_attache.png", :title=>"Прикрепить", :border=>0}, false)%>
+           </a>
+          <div id=divattache style="display:none;">     
+            <div id="upload-form">
+      <%= form_for(@ttmsfile) do |f| %>
+           <%= hidden_field_tag "ttmsfile[do]", "upload" %>
+           <%= hidden_field_tag "ttmsfile[idttms]", @ttm.id %>
+           <%= hidden_field_tag "ttmsfile[autor]", @staff_login.id %>
+           <%= hidden_field_tag :cl_id, params[:cl_id] %>
+           <%= hidden_field_tag "sessid" %>
+              File:
+              <%= f.file_field :file, :size=>40 %>
+              <p>
+              <%= f.submit "Upload It!" %><p>
+      <% end %>
+          </div>
+        </td></tr>
+        <%
+          if @ttmsfiles.count > 0
+          %>
+            <tr><td>
+              <div style="margin-left:5%;"><div class=td1>Файлы:</div><br>
+            </td></tr>
+        <%
+            @erpfiles.each do |erpfile|
+          %>
+            <tr><td class=tab3_td_white>
+        <%
+              if ttmsfile.status=='new'
+          %>
+               <%= link_to ttmsfile.name, ttmsfile_path(ttmsfile) %>
+               <%= link_to tag("img",{:src=>"/images/button_drop.gif", :title=>"Удалить",:border=>0},false), ttmsfile_path(ttmsfile,cl_id: params[:cl_id]), method: :delete, data: { confirm: 'Are you sure?' } %>
+        <%
+              else
+          %>
+              <del><%= ttmsfile.name%></del>
+        <%
+              end
+          %>
+           <br>*** <b><%= Auth.find(ttmsfile.autor).surname%></b> <%= ttmsfile.time.getlocal.strftime("%Y-%m-%d %H:%M")%>
+           </td></tr>
+         <%
+            end
+          end
+          %>
+        </table>
+      </table>
+<%= link_to 'Edit', edit_ttm_path(@ttm,cl_id: params[:cl_id]) if @staff_login.admin? %>

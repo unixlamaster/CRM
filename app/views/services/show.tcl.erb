@@ -1,0 +1,12 @@
+tclsh
+<% if @service.type_s == 'ipunnam' %>
+ios_config "interface gi0/2.<%= @service.vlan %>" "encapsulation dot1Q <%= @service.vlan %>" "ip unnumbered <%= get_interface_ipunnam(@service.pool)%>" "ip helper-address 194.190.110.245"  "no ip redirects"
+ios_config "interface gi0/2.<%= @service.vlan %>" "rate-limit input <%= @service.speed.to_i * 1000 %> <%= (@service.speed.to_i * 1000 * 1.5 / 8).to_i %> <%= @service.speed.to_i * 1000 * 2 / 8 %> conform-action transmit exceed-action drop" 
+ios_config "interface gi0/2.<%= @service.vlan %>" "rate-limit output <%= @service.speed.to_i * 1000 %> <%= (@service.speed.to_i * 1000 * 1.5 / 8).to_i %> <%= @service.speed.to_i * 1000 * 2 / 8 %> conform-action transmit exceed-action drop"
+ios_config "ip route <%= @service.ipaddr %> 255.255.255.255 GigabitEthernet0/2.<%= @service.vlan %>"
+<% elsif @service.type_s == 'nat' %>
+ios_config "interface gi0/2.<%= @service.vlan %>" "encapsulation dot1Q <%= @service.vlan %>" "ip address <%= IPAddr.new((IPAddr.new serv.ipaddr.chomp).to_i+1,Socket::AF_INET).to_s %> <%= (IPAddr.new serv.ipaddr.chomp).inspect.split(/[\/>]/)[1]%>" "ip helper-address 194.190.110.245"  "no ip redirects" "rate-limit input <%= @service.speed.to_i * 1000 %> <%= (@service.speed.to_i * 1000 * 1.5 / 8).to_i %> <%= @service.speed.to_i * 1000 * 2 / 8 %> conform-action transmit exceed-action drop" "rate-limit output <%= @service.speed.to_i * 1000 %> <%= (@service.speed.to_i * 1000 * 1.5 / 8).to_i %> <%= @service.speed.to_i * 1000 * 2 / 8 %> conform-action transmit exceed-action drop"
+<% elsif @service.type_s == 'inet6' %>
+ios_config "interface gi0/2.<%= @service.vlan %>" "encapsulation dot1Q <%= @service.vlan %>" "ipv6 address <%= @service.ipaddr.chomp %>/64"
+<% end %>
+write memory

@@ -1,0 +1,64 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+
+<form>
+<table width=100%><tr>
+<td>
+<b>
+Клиент:
+<%= select_tag :flag, options_for_select([["",""],["Цифровой Диалог","DD"],["Диалог Телеком","DT"]], params[:flag]) %>
+Тип:
+<%= select_tag :type, options_for_select([["",""],["ВОЛС","ppomap"],["WiFi","wifippomap"],['VoIP','voice']], params[:type]) %>
+c <input type=date name=d1 value="<%=@d1%>"> по <input type=date name=d2 value="<%=@d2%>">
+</td></tr><tr>
+<td>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Найти", :name => nil %>
+    <% rpath = reports_closeakt_path(params).split('?')
+       rpath[0]+=".xls"
+      %>
+    <%= link_to tag("img", { :src => "/images/excel.gif", :alt => "Excel", :border=>0, :title=>"Excel"}, false), rpath.join('?') %>
+</td></table>
+</form>
+
+              <table width=100% border=0  style="background-color: #f5f5dc;">
+                <tr>
+                <td class=hblist width= >Наименование клиента</td>
+                <td class=hblist  >№ Договора</td>
+                <td class=hblist  >Сервис</td>
+                <td class=hblist  >Дата оплаты</td>
+                <td class=hblist width= >Дата включения</td>
+                <td class=hblist width= >АКТ в CRM</td>
+                <td class=hblist width= >Сумма Ежемес платежа</td>
+                </tr>
+  <% 
+logger.debug @installrep[0].inspect
+   @installrep.each do |row|
+        cls = cycle :sclist, :dclist
+        pay_date = row.t5cr unless row.t5cr.nil?
+        pay_date = row.t5ch unless row.t5ch.nil?
+        pay_date = row.t5cl unless row.t5cl.nil?
+        install_date = row.t7cr unless row.t7cr.nil?
+        install_date = row.t7ch unless row.t7ch.nil?
+        install_date = row.t7res1date unless row.t7res1date.nil?
+        install_date = row.t7res2date unless row.t7res2date.nil?
+        install_date = row.t8cr unless row.t8cr.nil?
+        install_date = row.t8ch unless row.t8ch.nil?
+        install_date = row.t8res1date unless row.t8res1date.nil?
+     %>
+       <tr>
+<td class="<%=cls%>"><%= link_to row.cl_name, tasks_path(cl_id: row.cl_id, search: row.t_name) %></td>
+<td class="<%=cls%>"><%= row.t4dog_num %></td>
+<td class="<%=cls%>"><%= row.type_s %></td>
+<td class="<%=cls%>"><%= pay_date  %></td>
+<td class="<%=cls%>"><%= install_date %> </td>
+<td class="<%=cls%>"><%= row.t9ch %> </td>
+<td class="<%=cls%>"><%= row.t4_e_pay %></td>
+      </tr>
+  <% end %>
+ </table>

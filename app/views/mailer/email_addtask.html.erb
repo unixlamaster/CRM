@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+  <table>
+  <tr><td><b>Организация:</b></td><td><%=@client.name%></td></tr>
+  <tr><td><b>Адрес:</b></td><td><%=@task.name%></td></tr>
+<% if @task.type_s=~/Телефония/ %>
+       <tr><td><b>Количество линий</b></td><td><%=@task.target%></td></tr>
+<% else %>
+       <tr><td><b>Скорость:</b></td><td><%=@task.target%></td></tr>
+<% end %>
+  <tr><td><b>Тип сервиса:</b></td><td><%=@task.type_s%></td></tr>
+  <tr><td><b>Срок до:</b></td><td><%=@task.dead_line%></td></tr>
+  <tr><td><b>Менеджер:</b></td><td><%=@client.manager%></td></tr>
+  <tr><td>URL:</td><td><%= link_to "CRM", "http://mng.di-di.ru/tasks/#{@task.id}?cl_id=#{@client.id}" %></td></tr>
+  </table>
+</body></html>

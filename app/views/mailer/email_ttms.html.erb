@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+       <table class=tab1>
+         <tr><td class=tab1_td1>Источник обращение</td><td><%= @source %> </td></tr>
+         <tr><td class=tab1_td1>Дата/время обращения</td><td><%= @ttm.time_create %></td></tr>
+         <tr><td class=tab1_td1>Дата/время закрытия</td><td><%= @ttm.time_change %></td></tr>
+         <tr><td class=tab1_td1>Характер аварии</td><td>
+             <%= @ttm.dsc %>
+           </td>
+         </tr>
+         <tr><td class=tab1_td1>Причина и методы устранения</td><td>
+             <%= @ttm.cause %>
+           </td>
+         </tr>
+         <tr><td class=tab1_td1>Вывод</td><td>
+             <%= @ttm.recap %>
+           </td>
+         </tr>
+          <tr>
+            <td class=tab1_td1>Статус</td>
+            <td><%= @status %>
+            </td>
+          </tr>
+       </table>
+
+</body></html>

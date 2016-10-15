@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+<Styles>
+  <Style ss:ID="bb">
+   <Font ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="red">
+   <Interior ss:Color="#C00000" ss:Pattern="Solid"/>
+  </Style>
+</Styles>
+
+  <Worksheet ss:Name="Sheet1">
+    <Table>
+      <Row>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Название</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Адрес</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Сервис</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Менеджер</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Источник</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Дата</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Инсталляция</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Абоненская</Data></Cell>
+      </Row>
+    <% @cl_ppo.each do |client| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= client.name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= client.address %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= client.type_s %> <%= client.target %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= client.manager %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= client.cl_src %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= client.date_add %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= client.ipay %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= client.epay %></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

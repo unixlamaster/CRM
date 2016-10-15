@@ -1,0 +1,13 @@
+configure terminal
+interface gi0/2.<%= @service.vlan %>
+ encapsulation dot1Q <%= @service.vlan %>
+ ip unnumbered GigabitEthernet0/2.221
+ ip helper-address 194.190.110.245
+ no ip redirects
+ rate-limit input <%= @service.speed.to_i * 1000 %> <%= (@service.speed.to_i * 187.5).to_i %> <%= (@service.speed.to_i * 187.5 * 2).to_i %> conform-action transmit exceed-action drop
+ rate-limit output <%= @service.speed.to_i * 1000 %> <%= (@service.speed.to_i * 187.5).to_i %> <%= (@service.speed.to_i * 187.5 * 2).to_i %> conform-action transmit exceed-action drop
+ no cdp enable
+exit
+ip route <%= @service.ipaddr %> 255.255.255.255 GigabitEthernet0/2.<%= @service.vlan %>
+end
+write memory

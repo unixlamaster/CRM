@@ -1,0 +1,43 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+
+<%= form_tag reports_spec_ttmsrep_path, :method => 'get' do %>
+<table><tr><td>
+		Период 
+	<%= select_tag :mon, options_for_select( Array.new(7) {|i| Date.today.prev_month(i).strftime("%Y-%m") }, params[:mon]), include_blank: true %>
+</td><td>
+
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+     <input type=submit>
+<% end %>
+</td>
+<td> 
+<% np = params.dup
+   rpath = reports_spec_ttmsrep_path(np).split('?')
+   rpath[0]+=".xls"
+      %>
+<%= link_to tag("img", { :src => "/images/excel.gif", :alt => "Excel", :border=>0, :title=>"Excel"}, false), rpath.join('?') %>
+</td>
+</table>
+<table width=100%>
+  <tr>
+    <td class=hblist width=5%><%= sortable "mon","Месяц",{:search=>params[:search],:cl_id=>params[:cl_id],:period=>params[:mon]}%></td>
+    <td class=hblist><%= sortable "name","Клиент",{:search=>params[:search],:cl_id=>params[:cl_id],:period=>params[:mon]}%></td>
+    <td class=hblist><%= sortable "root","Причина",{:search=>params[:search],:cl_id=>params[:cl_id],:period=>params[:mon]}%></td>
+	<td class=hblist><%= sortable "cc","Кол-во",{:search=>params[:search],:cl_id=>params[:cl_id],:period=>params[:mon]}%></td>
+ </tr>
+
+<% @ttmsreps.each do |ttm| %>
+  <tr class="<%= cycle :sclist, :dclist %>">
+    <td><%= ttm.mon %></td>
+    <td><%= link_to "#{ttm.name}", ttms_path(cl_id: ttm.cl_id) %></td>
+    <td><%= ttm.root %></td>
+	<td><%= ttm.cc %></td>
+  </tr>
+<% end %>
+</table>
+

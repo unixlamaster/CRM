@@ -1,0 +1,120 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+
+<table width=100%>
+<%
+logger.debug params[:pg].inspect
+
+ if  params[:pg]!="off" %>
+<td><%= will_paginate @pporep %></td>
+ <% end %>
+<%= form_tag "/reports/pporep", :method => 'get' do %>
+<td>Одной страницей <input type=checkbox name=pg value="off" <%="checked" if params[:pg]=="off" %>>
+</td>
+<td valign=center>Статус
+         <select name=status[] multiple>
+                <option value=>
+              <%
+              task_status_hash.each do |key,str|
+               %>
+                      <option value=<%=key%> <%=" selected" if !params[:status].nil? && params[:status].include?(key) %> ><%=str%>
+
+              <% end %>
+         </select>
+</td>
+<td>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Найти", :name => nil %>
+</td></table>
+<% end %>
+
+              <table width=100% border=0  style="background-color: #f5f5dc;">
+                <tr>
+                <td class=hblist rowspan=2 width=10%><%= sortable "cl_name", "Клиент",params[:search]%></td>
+                <td class=hblist rowspan=2 width=20%><%= sortable "t_name", "Адрес",params[:search]%></td>
+                <td class=hblist rowspan=2 width=5%><%= sortable "manager", "Manager",params[:search]%></td>
+                <td class=hblist rowspan=2 size=5%><%= sortable "target", "Скорость",params[:search]%></td>
+                <td class=hblist colspan=2 width=12%>ППО-Карта</td>
+                <td class=hblist colspan=2 width=12%>ППО-Объект</td>
+                <td class=hblist colspan=2 width=12%>Схема</td>
+                <td class=hblist colspan=2 width=12%>ВОЛС</td>
+                <td class=hblist colspan=2 width=12%>Сервис</td>
+                </tr>
+                <tr>
+                <td class=hblist><%= sortable "t1cr", "Дата",params[:search]%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t2cr", "Дата",params[:search]%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t3cr", "Дата",params[:search]%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t4cr", "Дата",params[:search]%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t5cr", "Дата",params[:search]%></td>
+                <td class=hblist>Рез-т</td>
+                </tr>
+  <% @pporep.each do |row|
+        cls = cycle :sclist, :dclist
+     %>
+       <tr>
+<td class="<%=cls%>"><%= link_to row.cl_name, "/tasks/?cl_id=#{row.cl_id}" %></td>
+<td class="<%=cls%>"><%= row.t_name %></td>
+<td class="<%=cls%>"><%= row.manager %></td>
+<td class="<%=cls%>"><%= row.target %></td>
+<% if row.t1s=='end' %>
+ <td class="<%=cls%>"><abbr title=<%=row.t1cr%>><%=row.t1ch%></abbr></td>
+ <td class="grlist"><%=row.t1r%></td>
+<% elsif !row.t1s.nil? %>
+ <td class="<%=cls%>" align=center><%= ((Time.now.to_i-row.t1cr.to_i)/86400).to_i %>дн</td>
+ <td class=redlist><%= row.t1r %></td>
+<% else %>
+ <td class="<%=cls%>">&nbsp;</td>
+ <td class="<%=cls%>">&nbsp;</td>
+<% end %>
+<% if row.t2s=='end' %>
+ <td class="<%=cls%>"><abbr title=<%=row.t2cr%>><%=row.t2ch%></abbr></td>
+ <td class="grlist"><%=row.t2r%></td>
+<% elsif !row.t2s.nil? %>
+ <td align=center class="<%=cls%>"><%= ((Time.now.to_i-row.t2cr.to_i)/86400).to_i %>дн</td>
+ <td class=redlist><%= row.t2r %></td>
+<% else %>
+ <td class="<%=cls%>">&nbsp;</td>
+ <td class="<%=cls%>">&nbsp;</td>
+<% end %>
+<% if row.t3s=='end' %>
+ <td class="<%=cls%>"><abbr title=<%=row.t3cr%>><%=row.t3ch%></abbr></td>
+ <td class="grlist"><%=row.t3r%></td>
+<% elsif !row.t3s.nil? %>
+ <td align=center class="<%=cls%>"><%= ((Time.now.to_i-row.t3cr.to_i)/86400).to_i %>дн</td>
+ <td class=redlist><%= row.t3r %></td>
+<% else %>
+ <td class="<%=cls%>">&nbsp;</td>
+ <td class="<%=cls%>">&nbsp;</td>
+<% end %>
+<% if row.t4s=='end' %>
+ <td class="<%=cls%>"><abbr title=<%=row.t4cr%>><%=row.t4ch%></abbr></td>
+ <td class="grlist"><%=row.t4r%></td>
+<% elsif !row.t4s.nil? %>
+ <td align=center class="<%=cls%>"><%= ((Time.now.to_i-row.t4cr.to_i)/86400).to_i %>дн</td>
+ <td class=redlist><%= row.t4r %></td>
+<% else %>
+ <td class="<%=cls%>">&nbsp;</td>
+ <td class="<%=cls%>">&nbsp;</td>
+<% end %>
+<% if row.t5s=='end' %>
+ <td class="<%=cls%>"><abbr title=<%=row.t5cr%>><%=row.t5ch%></abbr></td>
+ <td class="grlist"><%=row.t5r%></td>
+<% elsif !row.t5s.nil? %>
+ <td class="<%=cls%>" align=center><%= ((Time.now.to_i-row.t5cr.to_i)/86400).to_i %>дн</td>
+ <td class=redlist><%= row.t5r %></td>
+<% else %>
+ <td class="<%=cls%>">&nbsp;</td>
+ <td class="<%=cls%>">&nbsp;</td>
+<% end %>
+      </tr>
+  <% end %>
+              </table>

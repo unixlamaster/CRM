@@ -1,0 +1,35 @@
+<%= form_for(@stat) do |f| %>
+  <% if @stat.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@stat.errors.count, "error") %> prohibited this comment from being saved:</h2>
+
+      <ul>
+      <% @stat.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.hidden_field :id %>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.select(:name , stat_name_hash[params[:statistic][:otdel]].keys.collect {|key| [stat_name_hash[params[:statistic][:otdel]][key],key] } )%>
+  </div>
+  <div class="field">
+    <%= f.label :score %><br />
+    <%= f.number_field :score %>
+  </div>
+  <div class="field">
+    <%= f.label :week %><br />
+    <input type=date name="statistic[week]" id=stat_week value=<%=@stat.week%> >
+  </div>
+  <div class="field">
+    <%= f.label :staff %><br />
+    <%= f.select(:staff_id, Auth.select("firstname,surname,id").collect {|staff| ["#{staff.firstname} #{staff.surname}",staff.id] unless staff.firstname.empty?}.compact) %>
+  </div>
+  <div class="actions">
+    <%= f.hidden_field :otdel %>
+    <%= f.submit %>
+  </div>
+<% end %>

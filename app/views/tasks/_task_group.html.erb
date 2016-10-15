@@ -1,0 +1,81 @@
+  <table width=80%><tr>
+    <td class=hblist>Адрес</td>
+    <td class=hblist>
+      <table width=100%><tr>
+        <td class=hblist width=20%>Тип</td>
+        <td class="hblist" width=20%>Дата создания</td>
+        <td class="hblist" width=20%>Срок</td>
+        <td class="hblist" width=20%>Статус</td>
+        <td class="hblist" width=20%>Создать задачу</td>
+      </tr></table>
+    </td>
+  </tr>
+
+<% point_group = zapros_gid = 0
+   tr_cl = "sclist"
+   type_t = nil
+   @task.each do |task|
+     if point_group ==0
+       tr_cl =  cycle :sclist, :dclist
+       point_group = task.point_group
+       zapros_gid = task.zapros_gid
+       %>
+       <tr>
+          <td class=<%= cycle( :wtask, :gtask, name: "zapros") %>><%=task.name%> 
+        <%
+            #            link_to tag("img", { :src => "/images/list_add.png", :title =>'ППО Объект',:border=>0}, false), new_task_path(:cl_id=>params[:cl_id], :type_t=>"ppomap", :zapros_gid=>zapros_gid) 
+                      %>
+          </td>
+          <td><table width=100%>
+       <%
+     elsif point_group != task.point_group
+       point_group = task.point_group
+	   type_t = nil
+       if zapros_gid != task.zapros_gid
+         zapros_gid = task.zapros_gid
+       %>
+           </td>
+         </table>
+       </tr>
+       <tr>
+          <td class=topborder><%=task.name%>  
+        <%
+            #            link_to tag("img", { :src => "/images/list_add.png", :title =>'ППО Объект',:border=>0}, false), new_task_path(:cl_id=>params[:cl_id], :type_t=>"ppomap", :zapros_gid=>zapros_gid) 
+                      %>
+          </td>
+          <td class=topborder><table width=100%>
+       <%
+       else
+       %>
+           </td>
+         </table>
+       </tr>
+       <tr>
+          <td class=<%= cycle( :wtask, :gtask, name: "zapros") %>><%=task.name%></td>
+          <td><table width=100%>
+       <%
+       end
+     end
+       %>
+            <tr class=<%= cycle( :sclist, :dclist, name: "ttask") %>>
+              <td width=20%><%= link_to task_type_hash[task.type_t], task_path(task,cl_id: params[:cl_id]) %></td>
+              <td width=20% align=center><%= task.time_create.strftime("%Y-%m-%d") %></td>
+              <td width=20% align=center><%= task.dead_line %></td>
+              <td width=20%  align=center bgcolor=<%= task_status_bgcolor(task.status)%>><%= task_status_hash[task.status] %></td>
+              <td width=20%>
+	<%= link_to tag("img", { :src => "/images/button_edit.gif", :title => "Edit",:border=>0}, false), edit_task_path(task,cl_id: params[:cl_id]) if @staff_login.admin? %>
+    <% if @staff_login.admin? || (task.status=="new" && task.autor==@staff_login.id) %>
+       <%= link_to tag("img", { :src => "/images/button_drop.gif", :title => "Удалить",:alt => "Удалить",:border=>0}, false), "/tasks/#{task.id}?cl_id=#{params[:cl_id]}&type_t=#{task.type_t}".html_safe(), method: :delete, data: { confirm: 'Are you sure?' } %>
+    <% end  %>
+    <%=  dd_reglament_button(task,type_t) if type_t.nil?  %>
+	<% type_t = task.type_t %>
+    <%= task.type_t =~ /^wifi/ ? dt_reglament_button(task) : dd_reglament_button(task,type_t) %>
+                </td>
+            </tr>
+  <% 
+  
+      end %>
+ </table>
+   </td>
+ </tr>
+</table>

@@ -1,0 +1,28 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+<table width=80%><td><%= will_paginate @task %></td>
+<td><%= link_to "Кратко", ppo_logs_path(cl_id: params[:cl_id]) %></td>
+<td>
+<%= form_tag tasks_path, :method => 'get' do %>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= hidden_field_tag :cl_id, params[:cl_id] %>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Найти", :name => nil %>
+<% end %>
+</td><td>Добавить 
+<%= link_to 'ППО-карту', new_task_path(cl_id: params[:cl_id], type_t: default_user_task) %> / 
+<%= link_to 'ППО-карту WiFi', new_task_path(cl_id: params[:cl_id], type_t: 'wifippomap') %> / 
+<%= link_to 'Схему', new_task_path(cl_id: params[:cl_id], type_t: 'shem') if @staff_login.groupid.include?(4) %> / 
+<%= link_to 'Телефония', new_task_path(cl_id: params[:cl_id], type_t: 'voice', type_s: 'Телефония') %> /
+<%= link_to 'Аренда', new_task_path(cl_id: params[:cl_id], type_t: 'arenda', type_s: 'Аренда') %>
+</td></table>
+
+<p>
+<%= render 'task_group' %>
+<p>
+<%= will_paginate @task %>
+

@@ -1,0 +1,218 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+      <table ><tr><td width=70%>
+        <table class=tab1>
+          <tr>
+            <td class=tab1_td1>Тип задачи</td>
+            <td><%= task_type_hash[@task.type_t]%></td>
+          </tr>
+          <tr>
+            <td class=tab1_td1>Адрес</td>
+            <td><%=@task.name%></td>
+          </tr>
+          <tr>
+            <td class=tab1_td1><%= @task.type_s=~/Телефония/ ? "Количество линий" : "Скорость" %></td>
+            <td>
+     <%= form_for(@task) do |f| %>
+            <%= @task.type_t=~/zakaz/ ? f.text_field(:target) : @task.target %>
+            </td>
+          </tr>
+          <tr>
+            <td class=tab1_td1>Тип сервиса</td>
+            <td><%=@task.type_s.nil? ? "Интернет" : @task.type_s%></td>
+          </tr>
+          <tr>
+            <td class=tab1_td1>Выполнить до</td>
+            <td><%=@task.dead_line%></td>
+          </tr>
+          <tr>
+            <td class=tab1_td1>Предпологаемый доход</td>
+            <td><%= f.text_field :ppo_income %> руб.</td>
+          </tr>
+          <tr>
+          <td class=tab1_td1>Лист дожима</td><td><%= f.check_box :dogim, {}, "yes"%></td>
+          </tr>
+
+          <tr>
+            <td class=tab1_td1>Статус</td>
+            <td>
+          <%= 
+                if @task.type_t =~ /ppo|sogl|pay|install/ && (@staff_login.groupid.include?(3) || @staff_login.groupid.include?(6))
+                  if @task.type_t=='install'
+                    task_vols_status_hash[@task.status]
+                  else
+                    task_status_hash[@task.status]
+                  end
+                else
+                  if @task.type_t=='install'
+                    f.select(:status, task_vols_status_hash.keys.collect {|key| [task_vols_status_hash[key],key]})
+                  else
+                    f.select(:status, task_status_hash.keys.collect {|key| [task_status_hash[key],key]})
+                  end
+                end
+             %>
+           <%= if @task.status=='end' && !@task.task_close.nil?
+                 "#{@task.from_user.surname unless @task.from_user.nil?} " + @task.task_close.strftime("%F")
+               elsif @task.status=='end'
+                 "#{@task.from_user.surname unless @task.from_user.nil?} " + @task.time_create.strftime("%F")
+               end
+             %> 
+            </td>
+          </tr>
+       <% if @task.type_t=~/zakaz/ %>
+         <tr>
+           <td class=tab1_td1>Номер договора</td>
+           <td><%= f.text_field :dogovor_num %>
+           </td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>Дата договора</td>
+           <td><input type=date name="task[dogovor_date]" id=dogovordate value=<%=@task.dogovor_date%>>
+           </td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>Ежемесячный платеж</td>
+           <td><%= f.text_field :flag %>
+           </td>
+         </tr>
+       <% end %>
+       <% if @task.type_t=~/arenda/ %>
+          <tr>
+           <td class=tab1_td1>Ежемесячный платеж</td>
+           <td><%= f.text_field :flag %>
+           </td>
+         </tr>
+       <% end %>
+
+       <% if @task.type_t=='install' %>
+         <tr><td class=tab1_td1>Планируемый срок "Магистраль"</td><td><input type=date name="task[res1_date]" id=res1date value=<%=@task.res1_date%>></td></tr>
+         <tr><td class=tab1_td1>Планируемый срок "Сварка"</td><td><input type=date name="task[res2_date]" id=res2date value=<%=@task.res2_date%>></td></tr>
+       <% end %>
+       <% if @task.type_t=='install1' || @task.type_t=='wifiinstall' %>
+         <tr><td class=tab1_td1>Планируемый срок "Сервис"</td><td><input type=date name="task[res1_date]" id=res1date value=<%=@task.res1_date%>></td></tr>
+       <% end %>
+         <tr>
+       <% if @task.type_t=~/pay/ %>
+<!--     
+          <td class=tab1_td1>Дата платежa</td>
+           <td>
+            <input type=date name="task[res1_date]" id=result value=<%=@task.res1_date%> ></td>
+         </tr> -->
+         <tr>
+           <td class=tab1_td1>Сумма платежа</td>
+           <td>
+            <%= f.text_field :result %>
+       <% else %>
+           <td class=tab1_td1><%= @task.type_t=~/zakaz|arenda/ ? "Инсталляционный платеж" : "Результат"%></td>
+           <td>
+            <%= f.text_field :result %>
+       <% end %>
+            <%= f.submit 'Сохранить изменение'%>&nbsp;
+            <%= hidden_field_tag "task[cl_id]", params[:cl_id] %>
+            <%= hidden_field_tag "task[type_t]", @task.type_t %>
+            <%= hidden_field_tag "cl_id", params[:cl_id] %>
+           </td>
+         </tr>
+        <% if @task.type_t=~/ppoobj/ %>
+         <tr>
+           <td class=tab1_td1>Требуются согласования</td>
+           <td><input type=checkbox name=task[flag] value="sogl" <%="checked" if @task.flag=~/sogl/%>>
+           </td>
+         </tr>
+        <% end %>
+     <% end %>
+           </td>
+         </tr>
+
+        </table>
+      </td><td rowspan=2 valign=top width=30%>
+        <table>
+    <% if @task.type_t=='install1' %>
+Добавить:
+<%= link_to 'Интернет', new_service_path(cl_id: params[:cl_id],"service[speed]"=>@task.target,"service[addr]"=>@task.name) %> /
+<%= link_to 'IP из пула', new_service_path(cl_id: params[:cl_id],"service[type_s]"=>"one-ip","service[speed]"=>@task.target,"service[addr]"=>@task.name) %> /
+<%= link_to 'VLAN', new_service_path(cl_id: params[:cl_id],"service[type_s]"=> "vlan","service[speed]"=>@task.target,"service[addr]"=>@task.name) %> /
+<%= link_to 'IPv6', new_service_path(cl_id: params[:cl_id],"service[type_s]"=> "inet6","service[speed]"=>@task.target,"service[addr]"=>@task.name) %>
+
+    <% end %>
+        <tr><td>
+          <a class=menu1 href=# onclick="divattache.style.display='';">
+    <%= tag("img",{:src=>"/images/button_attache.png", :title=>"Прикрепить", :border=>0}, false)%>
+           </a>
+          <div id=divattache style="display:none;">     
+            <div id="upload-form">
+      <%= form_for(@erpfile) do |f| %>
+           <%= hidden_field_tag "erpfile[do]", "upload" %>
+           <%= hidden_field_tag "erpfile[idtask]", @task.id %>
+           <%= hidden_field_tag "erpfile[userid]", @staff_login.id %>
+           <%= hidden_field_tag "erpfile[groupid]", @staff_login.groupid.min %>
+           <%= hidden_field_tag :cl_id, params[:cl_id] %>
+           <%= hidden_field_tag "sessid" %>
+              File:
+              <%= f.file_field :file, :size=>40 %>
+              <p>
+              <%= f.submit "Upload It!" %><p>
+      <% end %>
+          </div>
+        </td></tr>
+        <%
+          if @erpfiles.count > 0
+          %>
+            <tr><td>
+              <div style="margin-left:5%;"><div class=td1>Файлы:</div><br>
+            </td></tr>
+        <%
+            @erpfiles.each do |erpfile|
+          %>
+            <tr><td class=tab3_td_white>
+        <%
+              if erpfile.status=='new'
+          %>
+               <%= link_to erpfile.name, erpfile_path(erpfile) %>
+               <%= link_to tag("img",{:src=>"/images/button_drop.gif", :title=>"Удалить",:border=>0},false), erpfile_path(erpfile,cl_id: params[:cl_id]), method: :delete, data: { confirm: 'Are you sure?' } %>
+        <%
+              else
+          %>
+              <del><%= erpfile.name%></del>
+        <%
+              end
+          %>
+           <br>*** <b><%= erpfile.auth.surname unless erpfile.auth.nil?%></b> <%= erpfile.time.getlocal.strftime("%Y-%m-%d %H:%M")%>
+           </td></tr>
+         <%
+            end
+          end
+          %>
+        </table>
+      </td></tr>
+      <tr><td>
+        <table class=tab1 style="background-color:#cadaba;">
+           <tr>
+             <td class=tab1_td1>Комментарий:<br>
+                  <%= form_for(@comment) do |f| %>
+                       <%= f.text_area :text, cols: 70, rows: 7%>
+                       <%= hidden_field_tag "comment[idtask]", @task.id %>
+                       <%= hidden_field_tag :cl_id, params[:cl_id] %>
+                      <%= f.submit 'Добавить коммент'%>
+                  <% end %>
+              </td>
+           </tr>
+
+            <tr>
+              <td class=tab1_td1>Список сообщений:</td>
+            </tr>
+      <%
+        @comments.each do |comm|
+        %>
+        <tr><td><%=comm.text.html_safe%><br>*** <b><%= comm.auth.surname unless comm.auth.nil? %></b>&nbsp;<%=comm.time.getlocal.strftime("%Y-%m-%d %H:%M") unless comm.time.nil? %></td></tr>
+      <%
+        end
+        %>
+         </table>
+      </td><td></td></tr>
+
+      </table>
+<%= link_to 'Edit', edit_task_path(@task,cl_id: params[:cl_id]) if @staff_login.admin? %>

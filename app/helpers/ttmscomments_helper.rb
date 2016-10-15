@@ -1,0 +1,2 @@
+module TtmscommentsHelper
+end

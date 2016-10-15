@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+<Styles>
+  <Style ss:ID="bb">
+   <Font ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="white">
+   <Interior ss:Color="white" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="red">
+   <Interior ss:Color="red" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="yellowlist">
+   <Interior ss:Color="yellow" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="green">
+   <Interior ss:Color="#2e8b57" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="endtd">
+   <Interior ss:Color="#cadaba" ss:Pattern="Solid"/>
+  </Style>
+</Styles>
+
+  <Worksheet ss:Name="Sheet1">
+    <Table>
+<Column ss:AutoFitWidth="1"/>
+      <Row>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Клиент</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Адрес</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Менеджер</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Сервис</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Дата</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Дата изменения</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Статус</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Результат</Data></Cell>
+      </Row>
+    <% @genreps.each do |row| 
+      %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= row.name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row.address %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row.mng %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row.type_s %> <%= row.speed %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row.d_cr %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row.d_ch %></Data></Cell>
+        <Cell ss:StyleID="<%= task_status_bgcolor(row.status) %>"><Data ss:Type="String"><%= task_status_hash[row.status] %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row.result %></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

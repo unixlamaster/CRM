@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Idzakaz:</b>
+  <%= @zakazi.idzakaz %>
+</p>
+
+<p>
+  <b>Cl:</b>
+  <%= @zakazi.cl_id %>
+</p>
+
+<p>
+  <b>Znum:</b>
+  <%= @zakazi.znum %>
+</p>
+
+<p>
+  <b>Zdate:</b>
+  <%= @zakazi.zdate %>
+</p>
+
+<p>
+  <b>Fname:</b>
+  <%= @zakazi.fname %>
+</p>
+
+<p>
+  <b>Type pril:</b>
+  <%= @zakazi.type_pril %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%= @zakazi.status %>
+</p>
+
+<p>
+  <b>Service t:</b>
+  <%= @zakazi.service_t %>
+</p>
+
+
+<%= link_to 'Edit', edit_zakazi_path(@zakazi) %> |
+<%= link_to 'Back', zakazis_path %>

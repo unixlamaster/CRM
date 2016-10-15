@@ -1,0 +1,186 @@
+<%= form_for(@task) do |f| %>
+  <% if @task.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h2>
+
+      <ul>
+      <% @task.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+<script type="text/javascript">
+ function set_reglament_date(type_t){
+  document.getElementById('deadline').value = "2013-01-01";
+  var d = new Date();
+  var t = 0;
+  switch (type_t) {
+  case 'ppomap':
+    t = d.getDay == 5 ? d.getTime()+86400000*3 : d.getTime()+86400000;
+    break;
+  case 'ppoobj':
+    t = d.getDay >2 ? d.getTime()+86400000*6 : d.getTime()+86400000*3;
+    break;
+  case 'sogl':
+    t = d.getTime()+86400000*14;
+    break;
+  case 'shem':
+    t = d.getDay == 5 ? d.getTime()+86400000*3 : d.getTime()+86400000;
+    break;
+  case 'zakaz':
+    t = d.getDay == 5 ? d.getTime()+86400000*3 : d.getTime()+86400000;
+    break;
+  case 'pay':
+    t = d.getDay == 5 ? d.getTime()+86400000*3 : d.getTime()+86400000;
+    break;
+  case 'nopay':
+    t = d.getDay == 5 ? d.getTime()+86400000*3 : d.getTime()+86400000;
+    break;
+  case 'install1':
+    t = d.getTime()+86400000*14;
+    break;
+  case 'install':
+    t = d.getTime()+86400000*14;
+    break;
+  case 'akt':
+    t = d.getTime()+86400000*14;
+    break;
+  case 'wifippomap':
+    t = d.getDay == 5 ? d.getTime()+86400000*3 : d.getTime()+86400000;
+    break;
+  case 'wifippoobj':
+    t = d.getDay >2 ? d.getTime()+86400000*6 : d.getTime()+86400000*3;
+    break;
+  case 'wifisogl':
+    t = d.getTime()+86400000*14;
+    break;
+  case 'wifizakaz':
+    t = d.getDay == 5 ? d.getTime()+86400000*3 : d.getTime()+86400000;
+    break;
+  case 'wifipay':
+    t = d.getDay == 5 ? d.getTime()+86400000*3 : d.getTime()+86400000;
+    break;
+  case 'wifinopay':
+    t = d.getDay == 5 ? d.getTime()+86400000*3 : d.getTime()+86400000;
+    break;
+  case 'wifiinstall':
+    t = d.getTime()+86400000*14;
+    break;
+  case 'voice':
+    t = d.getDay == 5 ? d.getTime()+86400000*3 : d.getTime()+86400000;
+    break;
+  case 'arenda':
+    t = d.getDay == 5 ? d.getTime()+86400000*3 : d.getTime()+86400000;
+	break;
+  case 'upgrade':
+    t = d.getDay == 5 ? d.getTime()+86400000*3 : d.getTime()+86400000;
+    break;
+  case 'test-voip':
+    t = d.getDay == 5 ? d.getTime()+86400000*3 : d.getTime()+86400000;
+    break;
+  default:
+    alert('Я таких значений не знаю');
+  }
+  var r = new Date(t);
+  var yyyy = r.getFullYear().toString();
+  var mm = (r.getMonth()+1).toString();
+  var dd = r.getDate().toString();
+  var str = yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]);
+  document.getElementById('deadline').value = str;
+  false;
+}
+</script>
+        <p>
+        <%= datalist_addr.html_safe %>
+        <table class=viewtask ><td>
+        <table class=tab1>
+         <tr>
+         <td class=tab1_td1>Тип задачи</td>
+         <td>
+   <%= @staff_login.admin? || @staff_login.groupid.include?(4) ? f.select(:type_t, task_type_hash.keys.collect {|key| [task_type_hash[key],key]}, :onchange => "set_reglament_date(this.options[this.selectedIndex].value);".html_safe()) : (task_type_hash[@task.type_t]+hidden_field_tag( "task[type_t]", @task.type_t)).html_safe() %>
+         </td>
+         </tr>
+         <tr>
+         <td class=tab1_td1>Статус задачи</td>
+         <td>
+   <%= @staff_login.admin? ? f.select(:status, task_status_hash.keys.collect {|key| [task_status_hash[key],key]}) : (task_status_hash[@task.status]+hidden_field_tag( "task[status]", @task.status)).html_safe() %>
+         </td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>Адрес</td>
+           <td><%= @task.type_t =~ /ppomap|zakaz|voice/ || @staff_login.admin? ? f.text_field(:name, :list => 'addr', :size => 65) : @task.name.html_safe+f.hidden_field(:name) %>
+           </td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>Выполнить до</td>
+           <td><input type=date name="task[dead_line]" id=deadline value=<%=@task.dead_line%>>
+           </td>
+         </tr>
+         <tr>
+   <% if @task.type_s=~/Телефония/ %>
+           <td class=tab1_td1>Количество линий</td>
+           <td><%= f.text_field  :target, :size=>5 %>
+   <% else %>
+           <td class=tab1_td1>Скорость</td>
+           <td><%= f.text_field  :target, :size=>5 %> Мб/с
+   <% end %>
+           </td>
+         </tr>
+         <tr><td class=tab1_td1>Тип сервиса</td>
+   <% if @task.type_t=~/wifi/ %>
+         <td><%= f.select(:type_s, task_wifi_srv_type_hash.keys.collect {|key| [task_srv_type_hash[key],key]}) %>
+   <% else %>
+         <td><%= f.select(:type_s, task_srv_type_hash.keys.collect {|key| [task_srv_type_hash[key],key]}) %>
+   <% end %>
+         </td>
+         </tr>
+   <% if @staff_login.admin? && @task.type_t=='ppoobj' %>
+         <tr>
+         <td class=tab1_td1>Согласование</td>
+         <td>
+          <input type=checkbox name="task[flag]" value="sogl" <%= "checked" if @task.flag=~/sogl/%>>
+         </td>
+         </tr>
+   <% end %>
+   <% if @task.type_t =~ /ppomap/ %>
+         <tr>
+            <td class=tab1_td1>Предпологаемый доход</td>
+            <td><%= f.text_field :ppo_income %>
+            </td>
+          </tr>
+          <tr>
+            <td class=tab1_td1>Лист дожима</td>
+            <td><%= f.check_box :dogim, {}, "yes"%>
+            </td>
+          </tr>
+   <% end %>
+	<% if @task.type_t =~ /arenda/ %>
+         <tr>
+            <td class=tab1_td1>Инсталляция</td>
+            <td><%= f.text_field :result, :size=>10 %>
+            </td>
+          </tr>
+          <tr>
+            <td class=tab1_td1>Ежем. платеж</td>
+            <td><%= f.text_field :flag, :size=>10 %>
+            </td>
+          </tr>
+   <% end %>
+         <tr><td colspan=2>
+           <%= f.submit "Создать" %>&nbsp;
+           <%= hidden_field_tag "task[cl_id]", params[:cl_id] %>
+           <%= hidden_field_tag "cl_id", params[:cl_id] %>
+           <%= f.hidden_field :point_group %>
+           <%= f.hidden_field :zapros_gid %>
+           </td>
+         </tr>
+       </table></td>
+       </table>
+<% if params[:action]=='new'
+ %>
+<script type="text/javascript">
+ set_reglament_date('<%=params[:type_t].nil? ? "ppomap" : params[:type_t]%>');
+</script>
+<% end %>
+<% end %>

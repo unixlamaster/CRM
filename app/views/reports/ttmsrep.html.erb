@@ -1,0 +1,105 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+
+  <%
+              wd= Time.now.wday==0 ? 6 : Time.now.wday-1
+              t1 = Time.now - wd*3600*24 - 3600*24*7
+              t2 = Time.now - wd*3600*24 - 3600*24
+              %>
+<a href=/reports/ttmsrep?status[]=new&status[]=run>Открытые Обращения</a> |
+<a href=/reports/ttmsrep?d1=<%=t1.strftime("%Y-%m-%d")%>&d2=<%=t2.strftime("%Y-%m-%d")%>>Обращения за прошлую неделю</a> |
+<form>
+<table><tr><td>
+Статус</td><td>
+         <select name=status[] multiple>
+                <option value=>
+              <%
+              ttms_status_hash.each do |key,str|
+               %>
+                      <option value=<%=key%> <%=" selected" if !params[:status].nil? && params[:status].include?(key) %> ><%=str%>
+
+              <% end %>
+         </select>
+</td><td>Источник</td><td>
+         <select name=source[] multiple>
+                 <option value=>
+              <%
+              ttms_source_hash.each do |key,str|
+               %>
+                      <option value=<%=key%> <%=" selected" if !params[:source].nil? && params[:source].include?(key) %> ><%=str%>
+
+              <% end %>
+         </select>
+</td><td>Причина</td><td>
+         <select name=root[] multiple>
+                 <option value=>
+              <%
+              ttms_root_list.each do |str|
+               %>
+                      <option value="<%=str%>" <%=" selected" if !params[:root].nil? && params[:root].include?(str) %> ><%=str%>
+
+              <% end %>
+         </select>
+
+</td><td>Период с <input type=date name=d1 value="<%=params[:d1]%>"> по <input type=date name=d2 value="<%=params[:d2]%>">
+ <input type=submit>
+</td></td></table>
+</form>
+<table width=100%>
+<td><%= will_paginate @ttmsreps %></td><td>
+<b>Количество - <%= @ttmsreps.count %></b>
+</td><td>
+<%= form_tag "/reports/ttmsrep", :method => 'get' do %>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <% 
+  if ! params[:source].nil?
+     params[:source].each do |key|
+     %>
+        <input id="source" name="source[]" type="hidden" value="<%=key%>">
+    <% end 
+  end 
+  if ! params[:status].nil?
+     params[:status].each do |key|
+     %>
+        <input id="status" name="status[]" type="hidden" value="<%=key%>">
+    <% end
+  end %>
+    <%= hidden_field_tag :d1, params[:d1] %>
+    <%= hidden_field_tag :d2, params[:d2] %>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Найти", :name => nil %>
+<% end %>
+</td>
+</table>
+<table width=100%>
+  <tr>
+    <td class=hblist><%= sortable "idttms","##",{:search=>params[:search],:cl_id=>params[:cl_id],:status=>params[:status],:source=>params[:source],:d1=>params[:d1],:d2=>params[:d2]}%></td>
+    <td class=hblist><%= sortable "source","Источник обращение",{:search=>params[:search],:cl_id=>params[:cl_id],:status=>params[:status],:source=>params[:source],:d1=>params[:d1],:d2=>params[:d2]}%></td>
+    <td class=hblist><%= sortable "d1","Дата/Время обращения",{:search=>params[:search],:cl_id=>params[:cl_id],:status=>params[:status],:source=>params[:source],:d1=>params[:d1],:d2=>params[:d2]}%></td>
+    <td class=hblist><%= sortable "d2","Дата/Время восст-я",{:search=>params[:search],:cl_id=>params[:cl_id],:status=>params[:status],:source=>params[:source],:d1=>params[:d1],:d2=>params[:d2]}%></td>
+    <td class=hblist><%= sortable "period","Период",{:search=>params[:search],:cl_id=>params[:cl_id],:status=>params[:status],:source=>params[:source],:d1=>params[:d1],:d2=>params[:d2]}%></td>
+    <td class=hblist><%= sortable "dsc","Характер аварии",{:search=>params[:search],:cl_id=>params[:cl_id],:status=>params[:status],:source=>params[:source],:d1=>params[:d1],:d2=>params[:d2]}%></td>
+    <td class=hblist><%= sortable "cause","Причина и методы устранения",{:search=>params[:search],:cl_id=>params[:cl_id],:status=>params[:status],:source=>params[:source],:d1=>params[:d1],:d2=>params[:d2]}%></td>
+    <td class=hblist><%= sortable "recap","Вывод",{:search=>params[:search],:cl_id=>params[:cl_id],:status=>params[:status],:source=>params[:source],:d1=>params[:d1],:d2=>params[:d2]}%></td>
+	<td class=hblist><%= sortable "root","Причина",{:search=>params[:search],:cl_id=>params[:cl_id],:status=>params[:status],:source=>params[:source],:d1=>params[:d1],:d2=>params[:d2]}%></td>
+ </tr>
+
+<% @ttmsreps.each do |ttm| %>
+  <tr class="<%= cycle :sclist, :dclist %>">
+    <td <%= "class=desc" if ttm.status=='new' %> ><%= link_to ttm.idttms, "/ttms/#{ttm.idttms}/edit?cl_id=#{ttm.cl_id}" %></td>
+    <td <%= "class=desc" if ttm.status=='new' %>><%= link_to "#{ttm.source} #{ttm.name}", "/ttms/#{ttm.idttms}/edit?cl_id=#{ttm.cl_id}" %></td>
+    <td><%= ttm.d1 %></td>
+    <td><%= ttm.d2 %></td>
+    <td><%= "#{ttm.period} час." unless ttm.period.nil? %></td>
+    <td><%= ttm.dsc %></td>
+    <td><%= ttm.cause %></td>
+    <td><%= ttm.recap %></td>
+	<td><%= ttm.root %></td>
+  </tr>
+<% end %>
+</table>
+

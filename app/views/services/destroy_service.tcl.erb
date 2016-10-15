@@ -1,0 +1,4 @@
+tclsh
+ios_config "no interface gi0/2.<%= @service.vlan %>" 
+ios_config "no ip route <%= @service.ipaddr %> 255.255.255.255 GigabitEthernet0/2.<%= @service.vlan %>"
+write memory

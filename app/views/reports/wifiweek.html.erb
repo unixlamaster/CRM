@@ -1,0 +1,31 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+<form>
+<table width=100%>
+<td><b>
+    <%= Date.parse(@d1).cweek %> неделя <input type=date name=d1 value="<%=@d1%>">
+</b>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= submit_tag "Найти", :name => nil %>
+    </td>
+</table>
+</form>
+<table>
+  <tr>
+    <td class=hblist>Отчет</td>
+    <td class=hblist>Колличество</td>
+    <td class=hblist>Сумма</td>
+  </tr>
+
+<% @wifiweeks.each do |row| %>
+  <tr class="<%= cycle :sclist, :dclist %>">
+    <td><%= row[0] %></td>
+    <td><%= row[1] %></td>
+    <td><%= row[2] %></td>
+  </tr>
+<% end %>
+</table>

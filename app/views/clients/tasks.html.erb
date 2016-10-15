@@ -1,0 +1,44 @@
+<table><td width=50% valign=top>
+  <table><tr><td class=desc>Название: </td><td class=main><%=@client.name%></td>
+   <td rowspan=8 valign=top><%= link_to tag("img", { :src => "/images/button_edit.gif", :alt => "Edit",:border=>0,:title=>"Edit"}, false), edit_client_path(@client) %></td></tr>
+   <tr><td class=desc>Адрес: </td><td class=main><%=@client.address%></td></tr>
+   <tr><td class=desc>Контакт: </td><td class=main><%=@client.contact%></td></tr>
+   <tr><td class=desc>Время работы: </td><td class=main><%=@client.time_work%></td></tr>
+   <tr><td class=desc>Email: </td><td class=main><%=@client.email%></td></tr>
+   <tr><td class=desc>Менеджер: </td><td class=main><%=@client.manager%></td></tr>
+   <tr><td class=desc>Описание: </td><td class=main><%=@client.remark%></td></tr>
+  </table>
+</td>
+<td width=50%>
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+<table width=100%>
+<td>
+<%= form_tag tasks_path, :method => 'get' do %>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= hidden_field_tag :cl_id, params[:cl_id] %>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Найти", :name => nil %>
+<% end %>
+</td><td>Добавить 
+<%= link_to 'ППО-карту', new_task_path(cl_id: params[:cl_id], type_t: default_user_task) %> / 
+<%= link_to 'ППО-карту WiFi', new_task_path(cl_id: params[:cl_id], type_t: 'wifippomap') %> / 
+<%= link_to 'Схему', new_task_path(cl_id: params[:cl_id], type_t: 'shem') %> / 
+<%= link_to 'Расторжение', new_task_path(cl_id: params[:cl_id], type_t: 'zakaz', status: 'end1') %> /
+<%= link_to 'Телефония', new_task_path(cl_id: params[:cl_id], type_t: 'voice', type_s: 'Телефония') %>
+</td></table>
+
+<p>
+<% @client.ppo_reports.each do |ppo| %>
+<p>
+   <%= link_to ppo.t_name, client_tasks_path(id:ppo.cl_id,point_group:ppo.point_group) %>
+   <%=ppo.type_s %>
+   <%=ppo.attributes.keys.select {|key| key =~ /^t\ds$/ && !ppo.attributes[key].nil? }.map {|key| tag("img", { :src=> task_type_image_helper[key]}) }.join.html_safe %>
+<% end %>
+
+</td>
+</table>

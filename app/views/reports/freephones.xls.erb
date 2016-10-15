@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+<Styles>
+  <Style ss:ID="bb">
+   <Font ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="red">
+   <Interior ss:Color="#C00000" ss:Pattern="Solid"/>
+  </Style>
+</Styles>
+
+  <Worksheet ss:Name="Sheet1">
+    <Table>
+      <Row>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Телефон</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Тип</Data></Cell>
+      </Row>
+    <% @freephones.each do |serv| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= serv.phone %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= serv.type_p %></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

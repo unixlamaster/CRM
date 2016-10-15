@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+<Styles>
+  <Style ss:ID="bb">
+   <Font ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="red">
+   <Interior ss:Color="#C00000" ss:Pattern="Solid"/>
+  </Style>
+</Styles>
+
+  <Worksheet ss:Name="Sheet1">
+    <Table>
+      <Row>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Название</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Контакт</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Тех.Контакт</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Тип</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Vlan</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">IP-Addr</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Обновлен</Data></Cell>
+      </Row>
+    <% @services.each do |serv| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= serv.name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= serv.contact %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= serv.contact_tech %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= serv.type_s %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= serv.vlan %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= serv.ipaddr %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= serv.dd %></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

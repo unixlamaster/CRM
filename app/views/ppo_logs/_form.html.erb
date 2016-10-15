@@ -1,0 +1,156 @@
+ <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+  <table><tr><td width=70%>
+        <table class=tab1>
+          <tr>
+            <td class=tab1_td1>Тип задачи</td>
+            <td><%= task_type_hash[params[:type_t]]%></td>
+          </tr>
+          <tr>
+            <td class=tab1_td1>Адрес</td>
+   <%= form_for(@ppolog) do |f| %>
+            <td><%= params[:type_t] =~/ppomap/ ? f.text_field(:t_name) : @ppolog.t_name %></td>
+          </tr>
+          <tr>
+            <td class=tab1_td1><%= @ppolog.type_s =~ /Телефония/ ? "Количество линий" : "Скорость" %></td>
+            <td>
+            <%= params[:type_t] =~ /ppomap|zakaz/ ? f.text_field(:target) : @ppolog.target %>
+            </td>
+          </tr>
+          <tr>
+            <td class=tab1_td1>Тип сервиса</td><td>
+            <% if params[:type_t]=~/ppomap/
+                 if params[:type_t]=~/wifi/ %>
+                   <%= f.select(:type_s, task_wifi_srv_type_hash.keys.collect {|key| [task_srv_type_hash[key],key]}) %>
+              <% else %>
+                   <%= f.select(:type_s, task_srv_type_hash.keys.collect {|key| [task_srv_type_hash[key],key]}) %>
+              <% end %>
+            <% else %>
+                 <%= task_srv_type_hash[@ppolog.type_s] %>
+            <% end %>
+            </td>
+          </tr>
+          <tr>
+            <td class=tab1_td1>Статус</td>
+            <td>
+          <%=   case(params[:type_t])
+                  when /ppomap/ 
+                    f.select(:t1s, task_status_hash.keys.collect {|key| [task_status_hash[key],key]})
+                  when 'ppoobj'
+                    f.select(:t2s, task_status_hash.keys.collect {|key| [task_status_hash[key],key]})
+                  when 'sogl'
+                    f.select(:t3s, task_status_hash.keys.collect {|key| [task_status_hash[key],key]})
+                  when 'zakaz'
+                    f.select(:t4s, task_status_hash.keys.collect {|key| [task_status_hash[key],key]})
+                  when /pay/
+                    f.select(:t5s, task_status_hash.keys.collect {|key| [task_status_hash[key],key]})
+                  when 'shem'
+                    f.select(:t6s, task_status_hash.keys.collect {|key| [task_status_hash[key],key]})
+                  when 'install'
+                    f.select(:t7s, task_vols_status_hash.keys.collect {|key| [task_vols_status_hash[key],key]})
+                  when 'install1'
+                    f.select(:t8s, task_status_hash.keys.collect {|key| [task_status_hash[key],key]})
+                  when 'akt'
+                    f.select(:t9s, task_status_hash.keys.collect {|key| [task_status_hash[key],key]})
+                end
+             %>
+            </td>
+          </tr>
+       <% if params[:type_t] == 'zakaz' %>
+         <tr>
+           <td class=tab1_td1>Номер договора</td>
+           <td><%= f.text_field :t4dog_num %>
+           </td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>Дата договора</td>
+           <td><input type=date name="ppo_log[t4dog_date]" id=dogovordate value=<%=@ppolog.t4dog_date%>>
+           </td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>Ежемесячный платеж</td>
+           <td><%= f.text_field :t4_e_pay %>
+           </td>
+         </tr>
+       <% end %>
+       <% if params[:type_t] == 'install' %>
+         <tr><td class=tab1_td1>Планируемый срок "Магистраль"</td><td><input type=date name="ppo_log[t7res1date]" id=res1date value=<%=@ppolog.t7res1date%>></td></tr>
+         <tr><td class=tab1_td1>Планируемый срок "Сварка"</td><td><input type=date name="ppo_log[t7res2date]" id=res2date value=<%=@ppolog.t7res2date%>></td></tr>
+       <% end %>
+       <% if params[:type_t] == 'install1' || params[:type_t] == 'wifiinstall' %>
+         <tr><td class=tab1_td1>Планируемый срок "Сервис"</td><td><input type=date name="ppo_log[t8res1date]" id=res1date value=<%=@ppolog.t8res1date%>></td></tr>
+       <% end %>
+         <tr>
+       <% if params[:type_t] == 'pay' %>
+            <td class=tab1_td1>Дата платежa</td>
+            <td>
+               <input type=date name="ppo_log[t5cr]" id=t5cr value=<%=@ppolog.t5cr%> >
+            </td>
+          </tr> 
+          <tr>
+            <td class=tab1_td1>Сумма платежа</td>
+            <td>
+              <%= f.text_field :t5s %>
+            </td>
+       <% else %>
+           <td class=tab1_td1>
+             <%= params[:type_t] == 'zakaz' ? "Инсталляционный платеж" : "Результат"%></td>
+           <td>
+          <%=   case(params[:type_t])
+                  when /ppomap/
+                    f.text_field :t1r
+                  when 'ppoobj'
+                    f.text_field :t2r
+                  when 'sogl'
+                    f.text_field :t3r
+                  when 'zakaz'
+                    f.text_field :t4r
+                  when /pay/
+                    f.text_field :t5r
+                  when 'shem'
+                    f.text_field :t6r
+                  when 'install'
+                    f.text_field :t7r
+                  when 'install1'
+                    f.text_field :t8r
+                  when 'akt'
+                    f.text_field :t9r
+                end
+             %>
+           </td>
+       <% end %>
+          </tr>
+        <% if params[:type_t] == 'ppoobj' %>
+         <tr>
+           <td class=tab1_td1>Требуются согласования</td>
+           <td><input type=checkbox name="ppo_log[flag1]" value="sogl" <%="checked" if @ppolog.flag1=='sogl'%>>
+           </td>
+         </tr>
+        <% end %>
+        <% if params[:type_t] == 'ppomap' %>
+           <tr>
+             <td class=tab1_td1>Предпологаемый доход</td>
+             <td><%= f.text_field :ppo_income %>
+             </td>
+           </tr>
+           <tr>
+             <td class=tab1_td1>Лист дожима</td>
+             <td><%= f.check_box :dogim, {}, "yes"%>
+             </td>
+             </tr>         
+        <% end %>
+         <tr>
+            <td colspan=2 align=right>
+              <%= hidden_field_tag :type_t, params[:type_t] %>
+              <%= f.submit 'Сохранить изменение'%>&nbsp;
+           </td>
+         </tr>
+     <% end %>
+           </td>
+         </tr>
+        </table>
+      </tr>
+     </table>

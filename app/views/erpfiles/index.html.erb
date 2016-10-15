@@ -1,0 +1,35 @@
+<h1>Listing erpfiles</h1>
+
+<table>
+  <tr>
+    <th>Idfile</th>
+    <th>Idtask</th>
+    <th>Name</th>
+    <th>Userid</th>
+    <th>Time</th>
+    <th>Status</th>
+    <th>Groupid</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @erpfiles.each do |erpfile| %>
+  <tr>
+    <td><%= erpfile.idfile %></td>
+    <td><%= erpfile.idtask %></td>
+    <td><%= erpfile.name %></td>
+    <td><%= erpfile.userid %></td>
+    <td><%= erpfile.time %></td>
+    <td><%= erpfile.status %></td>
+    <td><%= erpfile.groupid %></td>
+    <td><%= link_to 'Show', erpfile %></td>
+    <td><%= link_to 'Edit', edit_erpfile_path(erpfile) %></td>
+    <td><%= link_to 'Destroy', erpfile, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Erpfile', new_erpfile_path %>

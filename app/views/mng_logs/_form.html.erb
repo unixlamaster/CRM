@@ -1,0 +1,29 @@
+<%= form_for(@mng_log) do |f| %>
+  <% if @mng_log.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@mng_log.errors.count, "error") %> prohibited this mng_log from being saved:</h2>
+
+      <ul>
+      <% @mng_log.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :cr_time %><br />
+    <%= f.datetime_select :cr_time %>
+  </div>
+  <div class="field">
+    <%= f.label :who %><br />
+    <%= f.text_field :who %>
+  </div>
+  <div class="field">
+    <%= f.label :text %><br />
+    <%= f.text_field :text %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

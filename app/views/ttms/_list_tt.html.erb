@@ -1,0 +1,47 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+<table width=80%><td><%= will_paginate @ttms %></td><td>
+<b>Количество - <%= @ttms.count %></b>
+</td><td>
+<%= form_tag ttms_path, :method => 'get' do %>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Найти", :name => nil %>
+<% end %>
+</td></table>
+       <table width=98% class=tab1>
+       <tr>
+         <td width=><%= sortable "idttms","##",{:search=>params[:search]}%></td>
+         <td width=><%= sortable "name","Название",{:search=>params[:search]}%></td>
+         <td width=><%= sortable "address","Адрес",{:search=>params[:search]}%></td>
+         <td width=><%= sortable "source","Источник обращение",{:search=>params[:search]}%></td>
+         <td width=><%= sortable "d1","Дата/Время обращения",{:search=>params[:search]}%></td>
+         <td width=><%= sortable "d2","Дата/Время восст-я",{:search=>params[:search]}%></td>
+         <td width=><%= sortable "dsc","Характер аварии",{:search=>params[:search]}%></td>
+         <td width=><%= sortable "cause","Методы устранения",{:search=>params[:search]}%></td>
+         <td width=><%= sortable "recap","Вывод",{:search=>params[:search]}%></td>
+         <td width=><%= sortable "root","Причина",{:search=>params[:search]}%></td>
+         <td width=>&nbsp;</td>
+       </tr>
+
+<% @ttms.each do |ttm| %>
+  <tr class="<%= cycle :sclist, :dclist %>">
+    <td <%= "class=desc" if ttm.status=='new' %> ><%= link_to "#{ttm.idttms} #{ttm.comp_group}", "/ttms/#{ttm.idttms}/edit?cl_id=#{ttm.cl_id}" %></td>
+    <td <%= "class=desc" if ttm.status=='new' %>><%= link_to "#{ttm.name}", "/ttms/?cl_id=#{ttm.cl_id}" %></td>
+    <td <%= "class=desc" if ttm.status=='new' %>><%= ttm.address %></td>
+    <td <%= "class=desc" if ttm.status=='new' %>><%= ttm.source %></td>
+    <td class=td7><%= ttm.d1 %></td>
+    <td class=td7><%= ttm.d2 %></td>
+    <td class=td7><%= link_to ttm.dsc.gsub(/\n/,"<br>").html_safe, "/ttms/#{ttm.idttms}/edit?cl_id=#{ttm.cl_id}" %></td>
+    <td class=td7><%= link_to ttm.cause.gsub(/\n/,"<br>").html_safe, "/ttms/#{ttm.idttms}/edit?cl_id=#{ttm.cl_id}" %></td>
+    <td class=td7><%= ttm.recap %></td>
+    <td class=td7><%= ttm.root %></td>
+    <td> <%= link_to tag("img", { :src => "/images/button_drop.gif", :title => "Удалить",:alt => "Удалить",:border=>0}, false), "/ttms/#{ttm.idttms}?cl_id=#{ttm.cl_id}", method: :delete, data: { confirm: 'Are you sure?' } if @staff_login.admin?  %>
+</td>
+  </tr>
+<% end %>
+</table>

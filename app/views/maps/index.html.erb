@@ -1,0 +1,63 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+
+ <div id="map" style="width: 1000px; height: 800px"></div>
+ 
+<script type="text/javascript">
+		var myMap;
+        var allPlace = [], newPlace;
+		
+		// Дождёмся загрузки API и готовности DOM.
+		ymaps.ready(init);
+		
+		function init () {
+			// Создание экземпляра карты и его привязка к контейнеру с
+			// заданным id ("map").
+			myMap = new ymaps.Map("map", {
+				// При инициализации карты обязательно нужно указать
+				// её центр и коэффициент масштабирования.
+				center: [47.224807, 39.720079], 
+				zoom: 11
+			});
+			
+			<% @pporeports.each do |ppo| %>
+				newPlace = new ymaps.Placemark([<%=ppo.latitude %>, <%= ppo.longitude %>], {
+								balloonContent: '<%= link_to ppo.cl_name, tasks_path(cl_id: ppo.cl_id) %>'
+							}, {
+								balloonPanelMaxMapArea: 0
+							});
+				
+				myMap.geoObjects.add(newPlace);
+				allPlace.push(newPlace);
+			
+			<% end %>
+			
+			ymaps.geoXml.load('http://mng.di-di.ru/rostov.kml')
+            .then(onGeoXmlLoad);
+			
+			ymaps.geoXml.load('http://mng.di-di.ru/bataysk.kml')
+            .then(onGeoXmlLoad);
+			
+			ymaps.geoXml.load('http://mng.di-di.ru/aksay.kml')
+            .then(onGeoXmlLoad);
+
+			ymaps.geoXml.load('http://mng.di-di.ru/azov.kml')
+            .then(onGeoXmlLoad);
+
+		}
+		
+//		console.log("!!!!");
+   
+       // Обработчик загрузки XML-файлов.
+    function onGeoXmlLoad (res) {
+        myMap.geoObjects.add(res.geoObjects);
+        if (res.mapState) {
+            res.mapState.applyToMap(myMap);
+        }
+    }
+</script>
+<%
+    %>

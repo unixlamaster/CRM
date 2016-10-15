@@ -1,0 +1,223 @@
+# coding: utf-8
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>CRMRor</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= csrf_meta_tags %>
+  <%= javascript_include_tag "application" %>
+  <%= render 'maps/myassets' if request.fullpath=~/\/maps|^\/$/%>
+
+</head>
+<body  text=#000000 link=#000040 vlink=#404040 alink=#0000ff leftmargin="5" topmargin="5" rightmargin="5" bottommargin="0" marginheight="0" marginwidth="0" >
+
+<div style="position:absolute; right:10px; top:10px; border: 1px solid blue; float:right; margin: 0px 0px 0px 0px; padding: 2px 10px 2px 10px;">
+<a href=http://mng.di-di.ru/>CRM</a> | 
+<a href=http://mng1.di-di.ru/mon/>Monitoring</a> | 
+<a href=http://192.168.5.102/>Cacti</a> | 
+<a href=http://mng1.di-di.ru/mon/admin/>Admin Mon</a> | 
+<a href=http://mng.di-di.ru/staff>Mail Admin</a>
+</div>
+<table width=100% cellpadding=3 cellspacing=3 border=0>
+ <tr>
+<!-- =========== Menu begin ====================== -->
+  <td>
+   <table width=100% cellpadding=0 cellspacing=0 border=0>
+    <tr>
+<% if request.fullpath=~/\/main|^\/$/ %>
+     <td width=10% class=blue>
+      <table cellspacing=3><td><a href=/ class=bold_white>Main</a>
+      </td></table>
+     </td>
+<% else %>
+     <td width=10% class=grey>
+      <table cellspacing=3><td><a href=/ class=bar_black>Main</a>
+      </td></table>
+     </td>
+<% end %>
+<% if request.fullpath=~/\/clients|zakazi|services|task|ttms|reports|mng_logs|ppo_logs/ %>
+     <td width=10% class=blue1>
+      <table cellspacing=3>
+       <td><a href=<%=ENV['SCRIPT_NAME']%>/clients/list class=bold_white>Clients</a>
+      </td></table>
+     </td>
+<% else %>
+     <td width=10% class=grey1>
+      <table cellspacing=3><td><a href=<%=ENV['SCRIPT_NAME']%>/clients/list class=bar_black>Clients</a>
+      </td></table>
+     </td>
+<% end %>
+
+     <td width=80% class=slist align=right>&nbsp;.</td>
+    </tr>
+    <tr>
+     <td colspan=3 bgcolor=#3066D2 valign=top>
+<!--  ===================   Submenu begin ======================== -->
+     <table width=100% cellpadding=5 cellspacing=0 border=0>
+       <tr>
+        <td valign=top>
+ <%
+   if request.fullpath=~/\/main/
+     if request.fullpath=~/\/phones/ %>
+          <a href=/main/phones class=bold_stat>Phones</a><font color=white> | </font>
+  <% else %>
+          <a href=/main/phones class=nor_stat>Phones</a><font color=white> | </font>
+  <% end
+   end
+   if request.fullpath=~/\/clients|zakazi|services|task|ttms|reports|mng_logs|ppo_logs/
+     if request.fullpath=~/\/list/ %>
+          <a href=/clients/list class=bold_stat>Общий список</a><font color=white> | </font>
+  <% else %>
+          <a href=/clients/list class=nor_stat>Общий список</a><font color=white> | </font>
+  <% end
+     if request.fullpath=~/\/exists/ %>
+          <a href=/clients/exists class=bold_stat>Действующие клиенты</a><font color=white> | </font>
+  <% else %>
+          <a href=/clients/exists class=nor_stat>Действующие клиенты</a><font color=white> | </font>
+  <% end
+logger.debug "request.fullpath=#{request.fullpath}"
+     if request.fullpath.include?('ttms') && ! request.fullpath.include?('=DT') %>
+          <a href=/ttms class=bold_stat>Обращения</a><font color=white> | </font>
+  <% else %>
+          <a href=/ttms class=nor_stat>Обращения</a><font color=white> | </font>
+  <% end
+     if request.fullpath=~/^\/ttms/ && request.fullpath=~/=DT/ %>
+          <a href=/ttms/?comp_group=DT class=bold_stat>Обращения ДТ</a><font color=white> | </font>
+  <% else %>
+          <a href=/ttms/?comp_group=DT class=nor_stat>Обращения ДТ</a><font color=white> | </font>
+  <% end
+     if request.fullpath=~/^\/reports/ %>
+          <a href=/reports/newclient class=bold_stat>Отчеты</a><font color=white> | </font>
+  <% else %>
+          <a href=/reports/newclient class=nor_stat>Отчеты</a><font color=white> | </font>
+  <% end
+     if request.fullpath=~/^\/mng_logs/ %>
+          <a href=/mng_logs class=bold_stat>Лента событий</a><font color=white> | </font><br>
+  <% else %>
+          <a href=/mng_logs class=nor_stat>Лента событий</a><font color=white> | </font><br>
+  <% end
+
+     if request.fullpath=~/\/reports/
+        if request.fullpath=~/newclient/ %>
+           <a href=/reports/newclient class=bold_stat>Новые клиенты</a>
+        <% else %>
+           <a href=/reports/newclient class=nor_stat>Новые клиенты</a>
+        <% end %>
+        <font color=white> | </font>
+        <%
+        if request.fullpath=~/\/pporep/ %>
+          <a href=/reports/pporep?direction=desc&sort=t1cr class=bold_stat>Отчет ППО</a>
+        <% else %>
+          <a href=/reports/pporep?direction=desc&sort=t1cr class=nor_stat>Отчет ППО</a>
+        <% end %>
+        <font color=white> | </font>
+        <%
+        if request.fullpath=~/wifipporep/ %>
+          <a href=/reports/wifipporep?direction=desc&sort=t1cr class=bold_stat>Отчет ППО WiFi</a>
+        <% else %>
+          <a href=/reports/wifipporep?direction=desc&sort=t1cr class=nor_stat>Отчет ППО WiFi</a>
+        <% end %>
+        <font color=white> | </font>
+        <%
+        if request.fullpath=~/dogimrep/ %>
+          <a href=/reports/dogimrep class=bold_stat>Лист дожима</a>
+        <% else %>
+          <a href=/reports/dogimrep class=nor_stat>Лист дожима</a>
+        <% end %>
+        <font color=white> | </font>
+        <%
+        if request.fullpath=~/installrep/ %>
+          <a href=/reports/installrep class=bold_stat>Инсталляции</a>
+        <% else %>
+          <a href=/reports/installrep class=nor_stat>Инсталляции</a>
+        <% end %>
+        <font color=white> | </font>
+        <%
+        if request.fullpath=~/profitlistrep/ %>
+          <a href=/reports/profitlistrep class=bold_stat>Профит-Лист</a>
+        <% else %>
+          <a href=/reports/profitlistrep class=nor_stat>Профит-Лист</a>
+        <% end %>
+        <font color=white> | </font>
+        <%
+        if request.fullpath=~/genrep/ %>
+          <a href=/reports/genrep class=bold_stat>Генератор отчетов</a>
+        <% else %>
+          <a href=/reports/genrep class=nor_stat>Генератор отчетов</a>
+        <% end %>
+        <font color=white> | </font>
+        <%
+        if request.fullpath=~/rts\/services/ %>
+          <a href=/reports/services class=bold_stat>Сервисы</a>
+        <% else %>
+          <a href=/reports/services class=nor_stat>Сервисы</a>
+        <% end %>
+        <font color=white> | </font>
+        <%
+        if request.fullpath=~/rts\/ttms/ %>
+          <a href=/reports/ttmsrep?direction=desc&sort=d1 class=bold_stat>Обращения</a>
+        <% else %>
+          <a href=/reports/ttmsrep?direction=desc&sort=d1 class=nor_stat>Обращения</a>
+        <% end %>
+        <font color=white> | </font>
+        <%
+        if request.fullpath=~/rts\/newzakaz/ %>
+          <a href=/reports/newzakaz class=bold_stat>Договора</a>
+        <% else %>
+          <a href=/reports/newzakaz class=nor_stat>Договора</a>
+        <% end %>
+
+        <font color=white> | </font><br>
+   <% end 
+ end
+
+     if request.fullpath=~/\/zakazi|services|task|ttms|ppo_logs/ && ! params[:cl_id].nil?
+       cl_id=params[:cl_id]
+       if request.fullpath=~/\/zakazi/ %>
+          <a href=# class=bold_stat>Заказы</a><font color=white> | </font>
+    <% else %>
+          <a href=# class=nor_stat>Заказы</a><font color=white> | </font>
+    <% end
+       if request.fullpath=~/\/task|\/ppo_logs/ %>
+          <a href=/tasks/?cl_id=<%=cl_id%> class=bold_stat>Задачи</a><font color=white> | </font>
+    <% else %>
+          <a href=/tasks/?cl_id=<%=cl_id%> class=nor_stat>Задачи</a><font color=white> | </font>
+    <% end
+       if request.fullpath=~/\/services/ %>
+          <a href=/services/?cl_id=<%=cl_id%> class=bold_stat>Сервисы</a><font color=white> | </font>
+    <% else %>
+          <a href=/services/?cl_id=<%=cl_id%> class=nor_stat>Сервисы</a><font color=white> | </font>
+    <% end
+       if request.fullpath=~/\/ttms/ %>
+          <a href=/ttms/?cl_id=<%=cl_id%> class=bold_stat>Обращения</a><font color=white> | </font>
+    <% else %>
+          <a href=/ttms/?cl_id=<%=cl_id%> class=nor_stat>Обращения</a><font color=white> | </font>
+    <% end
+     end
+ %>
+        </td>
+        <td align=right class=bold_white>
+          <%=@staff_login.user%>
+        </td>
+        <td valign=top align=right width=32>
+         <table cellpadding=0 cellspacing=0><td>
+          <img src=/favicon.ico width=30 height=30 ></td>
+         </table>
+        </td>
+
+       </tr>
+ <!-- -----------   Submenu end ------------ -->
+      </table>
+   </table>
+  </td>
+ </tr>
+<!-- -----------   Menu end ------------ -->
+</table>
+
+<%= render 'clients/show_info' unless params[:cl_id].nil? || params[:cl_id].empty?%>
+
+<%= yield %>
+
+</body>
+</html>

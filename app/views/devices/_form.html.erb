@@ -1,0 +1,53 @@
+<%= form_for(@device) do |f| %>
+  <% if @device.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@device.errors.count, "error") %> prohibited this device from being saved:</h2>
+
+      <ul>
+      <% @device.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :nic %><br />
+    <%= f.text_field :nic %>
+  </div>
+  <div class="field">
+    <%= f.label :perc %><br />
+    <%= f.number_field :perc %>
+  </div>
+  <div class="field">
+    <%= f.label :delay %><br />
+    <%= f.number_field :delay %>
+  </div>
+  <div class="field">
+    <%= f.label :last_ch %><br />
+    <%= f.datetime_select :last_ch %>
+  </div>
+  <div class="field">
+    <%= f.label :locat %><br />
+    <%= f.text_field :locat %>
+  </div>
+  <div class="field">
+    <%= f.label :ip %><br />
+    <%= f.text_field :ip %>
+  </div>
+  <div class="field">
+    <%= f.label :type %><br />
+    <%= f.text_field :type %>
+  </div>
+  <div class="field">
+    <%= f.label :uptime %><br />
+    <%= f.text_field :uptime %>
+  </div>
+  <div class="field">
+    <%= f.label :mac %><br />
+    <%= f.text_field :mac %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

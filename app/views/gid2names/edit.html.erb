@@ -1,0 +1,22 @@
+<h4>Редактирование Группы</h4>
+
+<%= render 'form' %>
+
+<%= link_to 'Show', @gid2name %> |
+<%= link_to 'Back', gid2names_path %>
+
+<p>
+<b>Члены группы</b>
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @user2gid.each do |member| %>
+  <tr>
+    <td><%= link_to "#{member.surname} #{member.firstname}", "edit_gid2name_path(gid2name)" %></td>
+  </tr>
+<% end %>
+</table>
+

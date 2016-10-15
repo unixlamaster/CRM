@@ -1,0 +1,33 @@
+<%= form_for(@client_post) do |f| %>
+  <% if @client_post.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@client_post.errors.count, "error") %> prohibited this client_post from being saved:</h2>
+
+      <ul>
+      <% @client_post.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+       <p>
+       <table class=viewtask ><td>
+         <table class=tab1>
+           <tr><td class=tab1_td1>Текст</td><td>
+               <%= f.text_area :body, cols: 65, rows: 4 %>
+             </td>
+           </tr>
+           <tr><td class=tab1_td1>Дата/время напоминания</td><td><input type=datetime-local name=client_post[remind] value='<%=@client_post.remind.strftime("%Y-%m-%dT%H:%M") unless @client_post.remind.nil?%>'></td></tr>
+           <tr><td colspan=2>
+             <%=f.submit 'Enter'%>&nbsp;
+             <%= hidden_field_tag "client_post[cl_id]", params[:cl_id] %>
+             <%= hidden_field_tag "cl_id", params[:cl_id] %>
+             </td>
+           </tr>
+         </table>
+       </td>
+       </table>
+
+
+<% end %>

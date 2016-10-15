@@ -1,0 +1,96 @@
+
+interface = "ether2"
+action = ARGV.shift
+case action
+  when "add"
+    add_to(interface, ARGV)
+  when "remove"
+     remove_from(ARGV)
+  else
+    print "Make a choice\n"
+    exit
+end
+
+def cmd(com)
+ `ssh -l admin 10.61.0.26 #{com}`
+end
+
+def add_to(if, arv)
+  (vlan, network, mask, ip, range, ipv6 ) = arv
+
+	cmd("/interface vlan add interface=#{if} l2mtu=1576 name=vlan#{vlan} vlan-id=#{vlan}")
+	cmd("/ip address add address=#{ip}/#{mask} interface=vlan#{vlan} network=#{network}")
+	cmd("/ip pool add name=pool_vlan#{vlan} ranges=#{range}")
+	cmd("/ip dhcp-server add address-pool=pool_vlan#{vlan} disabled=no interface=vlan#{vlan} name=dhcp_vlan#{vlan}")
+        cmd("/ip dhcp-server network add address=#{network}/#{mask} dns-server=194.190.110.245,8.8.8.8 gateway=#{ip}");
+	cmd("/ipv6 pool add name=poolv6_vlan#{vlan} prefix=#{ipv6}/64 prefix-length=64")
+	cmd("/ipv6 dhcp-server add address-pool=poolv6_vlan#{vlan} disabled=no interface=vlan#{vlan} name=dhcpv6_vlan#{vlan}")
+	cmd("/ipv6 address add address=#{ipv6} interface=vlan#{vlan}")
+end
+
+def remove_from(arv)
+   (vlan, network, mask, ip, ip_range, ipv6 ) = arv
+	out1 = cmd("/ip dhcp-server network print")
+	num = rem_network(network,out1);
+	cmd("/ip dhcp-server network remove numbers=#{num}")
+	cmd("/ip dhcp-server remove dhcp_vlan#{vlan}")
+	cmd("/ip pool remove pool_vlan#{vlan}")
+	out1 = cmd("/ip address print")
+	num = rem_network(ip,out1)
+	cmd("/ip address remove numbers=#{num}")
+	out1 = cmd("/ipv6 address print")
+	num = ipv6_network(ipv6,out1)
+	cmd("/ipv6 address remove numbers=#{num}")
+	out1 = cmd("/ipv6 dhcp-server print")
+	num = ipv6_dhcp(vlan,out1)
+	cmd("/ipv6 dhcp-server remove numbers=#{num}")
+	cmd("/ipv6 pool remove poolv6_vlan#{vlan}")
+	cmd("/interface vlan remove vlan#{vlan}")
+end
+
+def ipv6_dhcp(vlan,out1)
+	my @str_list = @_;
+	my $choice = "dhcpv6_vlan$vl";
+	out1.split(/\r\n/).each do |str|{
+		$line =~ s/^\s+//;
+		my @word = (split /\s+/, $line);
+		if (@word[1] eq $choice){
+			return @word[0];
+		}
+	}
+	return -1;
+end
+
+def ipv6_network
+	my $net_address = shift;
+	my @str_list = @_;
+	foreach my $line (@str_list){
+		$line =~ s/^\s+//;
+		my @word = (split /\s+/, $line);
+		#print @word[1]."\n";
+		if (@word[0] =~ /^\d+$/){
+			my ($net,$msk) = (split /\//, @word[2] );
+			if ($net_address eq $net){
+				return @word[0];
+			}
+		}
+	}
+	return -1;
+end
+
+def rem_network
+	my $net_address = shift;
+	my @str_list = @_;
+	foreach my $line (@str_list){
+		$line =~ s/^\s+//;
+		my @word = (split /\s+/, $line);
+		#print @word[1]."\n";
+		if (@word[0] =~ /^\d+$/){
+			my ($net,$msk) = (split /\//, @word[1] );
+			if ($net_address eq $net){
+				return @word[0];
+			}
+		}
+	}
+	return -1;
+end

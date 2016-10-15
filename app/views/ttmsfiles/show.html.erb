@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Idfile:</b>
+  <%= @ttmsfile.idfile %>
+</p>
+
+<p>
+  <b>Idttms:</b>
+  <%= @ttmsfile.idttms %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @ttmsfile.name %>
+</p>
+
+<p>
+  <b>Userid:</b>
+  <%= @ttmsfile.userid %>
+</p>
+
+<p>
+  <b>Time:</b>
+  <%= @ttmsfile.time %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%= @ttmsfile.status %>
+</p>
+
+<p>
+  <b>Groupid:</b>
+  <%= @ttmsfile.groupid %>
+</p>
+
+
+<%= link_to 'Edit', edit_ttmsfile_path(@ttmsfile) %> |
+<%= link_to 'Back', ttmsfiles_path %>

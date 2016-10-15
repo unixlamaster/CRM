@@ -1,0 +1,16 @@
+<table><tr><td class=desc>Название: </td><td class=main><%=@client.name%></td>
+<td rowspan=8 valign=top>
+<%= link_to tag("img", { :src => "/images/button_edit.gif", :alt => "Edit",:border=>0,:title=>"Edit"}, false), edit_client_path(@client) %>
+<% if @staff_login.groupid.include?(3) || @staff_login.groupid.include?(6) #  Отдел продаж %>
+	<div id="div_email">
+	<%= link_to_function tag("img", { :src => "/images/button_send.png", :alt => "Напоминание о долге",:border=>0,:title=>"Напоминание о долге"}, false), "client_notification(#{@client.id})" %>
+	</div>
+<% end %>
+</td></tr>
+<tr><td class=desc>Адрес: </td><td class=main><%=@client.address%></td></tr>
+<tr><td class=desc>Контакт: </td><td class=main><%= "по коммерческим вопросам: " + @client.contact if (!@client.contact.nil? && !@client.contact.empty?)%> <%= "по техническим вопросам: " + @client.contact_tech if (!@client.contact_tech.nil? && !@client.contact_tech.empty?) %></td></tr>
+<tr><td class=desc>Время работы: </td><td class=main><%=@client.time_work%></td></tr>
+<tr><td class=desc>Email: </td><td class=main><%= "по коммерческим вопросам: " + @client.email if (!@client.email.nil? && !@client.email.empty?)%> <%= "по техническим вопросам: " + @client.email_tech if (!@client.contact_tech.nil? && !@client.email_tech.empty?) %></td></tr>
+<tr><td class=desc>Менеджер: </td><td class=main><%=@client.manager%></td></tr>
+<tr><td class=desc>Описание: </td><td class=main><%=@client.remark%></td></tr>
+</table>

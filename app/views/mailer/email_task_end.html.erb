@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+ <b>Завершена инсталляция сервиса</b>
+<table><tr>
+<td>Клиент</td><td><%= @client.name %></td></tr>
+<tr><td>Адрес</td><td><%= @task.name %></td></tr>
+<tr><td>Договор</td><td><%= @ppolog.t4dog_num unless @ppolog.nil? %> от <%= @ppolog.t4dog_date unless @ppolog.nil? %></td></tr>
+<tr><td>Инсталляционный платеж</td><td><%= @ppolog.t4_i_pay unless @ppolog.nil?  %></td></tr>
+<tr><td>Ежемесячный платеж</td><td><%= @ppolog.t4_e_pay unless @ppolog.nil?  %></td></tr>
+<tr><td>Сервис</td><td><%= @task.type_s %></td></tr>
+<% if @task.type_s=~/Телефония/ %>
+       <tr><td><b>Количество линий</b></td><td><%=@task.target%></td></tr>
+<% else %>
+       <tr><td>Скорость</td><td><%= @task.target %></td></tr>
+<% end %>
+</table>
+
+  
+  <b>Комментарии:</b><p>
+ <% @comments.each do |comment|
+  %>
+  <p><%=comment.text.html_safe%><br>***<b><%=comment.auth.fullname unless comment.auth.nil?%></b> <%=comment.time.strftime("%Y-%m-%d %H:%M")%></p>
+ <%
+    end
+  %>
+</body></html>

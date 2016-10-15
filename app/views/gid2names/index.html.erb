@@ -1,0 +1,21 @@
+<h4>Список групп</h4>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @gid2names.each do |gid2name| %>
+  <tr>
+    <td><%= gid2name.id %></td>
+    <td><%= link_to gid2name.name, edit_gid2name_path(gid2name) %></td>
+    <td><%= link_to 'Destroy', gid2name, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Gid2name', new_gid2name_path %>

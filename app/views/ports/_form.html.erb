@@ -1,0 +1,49 @@
+<%= form_for(@port) do |f| %>
+  <% if @port.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@port.errors.count, "error") %> prohibited this port from being saved:</h2>
+
+      <ul>
+      <% @port.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :idport %><br />
+    <%= f.number_field :idport %>
+  </div>
+  <div class="field">
+    <%= f.label :nic %><br />
+    <%= f.text_field :nic %>
+  </div>
+  <div class="field">
+    <%= f.label :port %><br />
+    <%= f.number_field :port %>
+  </div>
+  <div class="field">
+    <%= f.label :time_ch %><br />
+    <%= f.datetime_select :time_ch %>
+  </div>
+  <div class="field">
+    <%= f.label :status %><br />
+    <%= f.number_field :status %>
+  </div>
+  <div class="field">
+    <%= f.label :label %><br />
+    <%= f.text_field :label %>
+  </div>
+  <div class="field">
+    <%= f.label :trap %><br />
+    <%= f.text_field :trap %>
+  </div>
+  <div class="field">
+    <%= f.label :cacti_url %><br />
+    <%= f.text_field :cacti_url %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

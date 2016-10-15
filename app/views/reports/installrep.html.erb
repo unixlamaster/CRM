@@ -1,0 +1,137 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+
+<form>
+<table width=100%><tr>
+<td>
+<b>
+Клиент:
+<%= select_tag :flag, options_for_select([["",""],["Цифровой Диалог","DD"],["Диалог Телеком","DT"]], params[:flag]) %>
+Тип:
+<%= select_tag :type, options_for_select([["",""],["ВОЛС","ppomap"],["WiFi","wifippomap"],['VoIP','voice']], params[:type]) %>
+Статус:
+<%= select_tag :status, options_for_select([["",""],["В процессе подключения","run"],["Сервис подан","end"]], params[:status]) %>
+</td></tr><tr>
+<td>
+<b>Количество - <%= @installrep.count %></b></td>
+<td>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Найти", :name => nil %>
+    <% rpath = reports_installrep_path(params).split('?')
+       rpath[0]+=".xls"
+      %>
+    <%= link_to tag("img", { :src => "/images/excel.gif", :alt => "Excel", :border=>0, :title=>"Excel"}, false), rpath.join('?') %>
+</td></table>
+</form>
+
+              <table width=100% border=0  style="background-color: #f5f5dc;">
+                <tr>
+                <td class=hblist width=20%><%= sortable "cl_name", "Клиент"%></td>
+                <td class=hblist width=20%><%= sortable "t_name", "Адрес"%></td>
+                <td class=hblist width=10%><%= sortable "manager", "Manager"%></td>
+                <td class=hblist size=10%><%= sortable "t2d", "Договор от"%></td>
+                <td class=hblist size=10%><%= sortable "t5cr", "Оплата"%></td>
+                <td class=hblist width=5%>Линейные работы</td>
+                <td class=hblist width=5%>Сварка</td>
+                <td class=hblist width=5%>Инсталляция</td>
+                <td class=hblist width=5%>АКТ</td>
+                <td class=hblist width=5%>Сумма инсталляции</td>
+                <td class=hblist width=5%>Сумма Ежемес платежа</td>
+                </tr>
+  <% sumi=suma=0
+   @installrep.each do |row|
+        cls = cycle :sclist, :dclist
+        pay_day = if row.t5cr.nil? || row.t5s != 'end'
+                    nil
+                  else
+                    (Date.today - row.t5cr).to_i
+                  end
+		logger.debug row.t5cr
+		logger.debug pay_day
+        pay_color = if pay_day.nil?
+                       cls
+                    elsif pay_day > 21
+                      "redlist"
+                    else
+                      "yellowlist"
+                    end
+        pay_date = row.t5cr unless row.t5cr.nil?
+        pay_date = row.t5ch unless row.t5ch.nil?
+        pay_date = row.t5cl unless row.t5cl.nil?
+     %>
+       <tr>
+<td class="<%=cls%>"><%= link_to row.cl_name, tasks_path(cl_id: row.cl_id,search: row.t_name) %></td>
+<td class="<%=cls%>"><%= row.t_name %></td>
+<td class="<%=cls%>"><%= row.manager %></td>
+<% if row.t4s=='end1' %>
+  <td class="redlist">Расторжение</td>
+<% else %>
+  <td class="<%=cls%>"><%= row.t4dog_date unless row.t4dog_date.nil? %></td>
+<% end %>
+<td class="<%= pay_color%>"><%= pay_date unless pay_day.nil? %></td>
+     <%
+#----------------------------------  Install ----------------
+      if row.type_t=='wifippomap'
+        if row.t7s=='end' %>
+<td class="endtd" align=center colspan=3><%=row.t7ch%></td>
+     <% elsif row.t7s=='new' %>
+<td class="redlist" align=center colspan=3><%=row.t7res1date%></td>
+     <% elsif row.t7s=='run' %>
+<td class="grlist" colspan=3><%=row.t7res1date%></td>
+     <% else %>
+<td class="<%=cls%>" colspan=3>&nbsp;</td>
+     <% end 
+      else
+        if row.t7s=='end' || row.t7s=='end0' %>
+<td class="endtd" align=center><%=row.t7ch%></td>
+     <% elsif row.t7s=='new' %>
+<td class="redlist" align=center><%=row.t7res1date%></td>
+     <% elsif row.t7s=='run' %>
+<td class="grlist"><%=row.t7res1date%></td>
+     <% else %>
+<td class="<%=cls%>">&nbsp;</td>
+     <% end %>
+     <% if row.t7s=='end' %>
+<td class="endtd" align=center><%=row.t7ch%></td>
+     <% elsif row.t7s=='new' %>
+<td class="redlist" align=center><%=row.t7res2date%></td>
+     <% elsif row.t7s=='run' %>
+<td class="grlist"><%=row.t7res2date%></td>
+     <% else %>
+<td class="<%=cls%>">&nbsp;</td>
+     <% end %>
+     <% if row.t8s=='end' %>
+<td class="endtd" align=center><%=row.t8ch%></td>
+     <% elsif row.t8s=='new' %>
+<td class="redlist" align=center><%=row.t8res1date%></td>
+     <% elsif row.t8s=='run' %>
+<td class="grlist"><%=row.t8res1date%></td>
+     <% else %>
+<td class="<%=cls%>">&nbsp;</td>
+     <% end %>
+   <% end 
+#----------------------------------  END Install ----------------
+%>
+
+     <% if row.t9s=='new' %>
+<td class="redlist" align=center>&nbsp;</td>
+     <% elsif row.t9s=='run' %>
+<td class="grlist">&nbsp;</td>
+     <% else %>
+<td class="<%=cls%>">&nbsp;</td>
+     <% end %>
+
+<td class="<%=cls%>"><%= row.t4_i_pay %></td>
+<td class="<%=cls%>"><%= row.t4_e_pay %></td>
+      </tr>
+  <%
+      sumi+=row.t4_i_pay.nil? ? 0 : row.t4_i_pay.to_i
+      suma+=row.t4_e_pay.nil? ? 0 : row.t4_e_pay.to_i
+     end %>
+ <tr><td colspan=9>&nbsp;</td><td class=redlist><b><%=sumi%></b></td><td class=redlist><b><%=suma%></b></td></tr>
+              </table>

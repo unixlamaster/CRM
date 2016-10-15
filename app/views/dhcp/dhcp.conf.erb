@@ -1,0 +1,20 @@
+<% @services.each_key do |pool| %>
+	<% @services[pool][:vlans].each_key do |vlan| %>
+class "vlan<%=vlan%>" {  match if binary-to-ascii(10,16,"",substring(option agent.remote-id,10,2)) = "<%=vlan%>";}
+	<% end %>
+subnet <%=@services[pool][:net_addr]%> netmask <%=@services[pool][:net_mask] %> {
+  option routers <%=@services[pool][:gw_addr]%>;
+  option broadcast-address <%=@services[pool][:net_broadcast]%>;
+  default-lease-time 1200;
+  max-lease-time 1800;
+  	<% @services[pool][:vlans].each_key do |vlan| %>
+  pool {
+   log ( info, concat( "vlan",binary-to-ascii(10,16,"",substring(option agent.remote-id,10,2))));
+    allow members of "vlan<%=vlan%>";
+		<% @services[pool][:vlans][vlan].each do |range| %>
+			range <%=range%>;
+		<% end %>
+  }
+	<% end %>
+}
+<% end %>

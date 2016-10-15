@@ -1,0 +1,113 @@
+<p id="notice"><%= notice %></p>
+<table width=100%><td><%= will_paginate @services %></td><td>
+<%= form_tag services_path, :method => 'get' do %>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= hidden_field_tag :cl_id, params[:cl_id] %>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Найти", :name => nil %>
+<% end %>
+</td><td>
+Добавить:
+<%= link_to 'IP-unnam', new_service_path(cl_id: params[:cl_id],"service[type_s]"=> "ipunnam") %> / 
+<%= link_to 'NAT, серые IP', new_service_path(cl_id: params[:cl_id],"service[type_s]"=> "nat") %> / 
+<%= link_to 'Интернет', new_service_path(cl_id: params[:cl_id]) %> / 
+<%= link_to 'IP из пула', new_service_path(cl_id: params[:cl_id],"service[type_s]"=> "one-ip") %> / 
+<%= link_to 'VLAN', new_service_path(cl_id: params[:cl_id],"service[type_s]"=> "vlan") %> /
+<%= link_to 'IPv6', new_service_path(cl_id: params[:cl_id],"service[type_s]"=> "inet6") %> /
+<%= link_to 'ВОЛС', new_service_path(cl_id: params[:cl_id],"service[type_s]"=> "vols") %> /
+<%= link_to 'VoIP', new_service_path(cl_id: params[:cl_id],"service[type_s]"=> "voip") %> /
+<%= link_to 'Телефон', new_service_path(cl_id: params[:cl_id],"service[type_s]"=> "phone") %> /
+<%= link_to 'LM-WiFi', new_service_path(cl_id: params[:cl_id],"service[type_s]"=> "lm-wifi") %> /
+<%= link_to 'POOL', new_service_path(cl_id: @client.flag =='DD' ? 71 : 413,"service[type_s]"=> "pool") %> 
+</td></table>
+<table width=100%>
+  <tr>
+    <td class=hblist><%= sortable "type_s", "Тип",{:search=>params[:search], :cl_id=> params[:cl_id]}%></td>
+    <td class=hblist><%= sortable "city", "Город",{:search=>params[:search], :cl_id=> params[:cl_id]}%></td>
+    <td class=hblist><%= sortable "addr", "Адрес",{:search=>params[:search], :cl_id=> params[:cl_id]}%></td>
+    <td class=hblist><%= sortable "speed", "Скорость",{:search=>params[:search], :cl_id=> params[:cl_id]}%></td>
+    <td class=hblist><%= sortable "vlan", "VLAN ID",{:search=>params[:search], :cl_id=> params[:cl_id]}%></td>
+    <td class=hblist><%= sortable "ipaddr", "IP addr",{:search=>params[:search], :cl_id=> params[:cl_id]}%></td>
+    <td class=hblist colspan=2><%= sortable "port_id", "Порт оборудования",{:search=>params[:search], :cl_id=> params[:cl_id]}%></td>
+  </tr>
+
+<% @services.each do |service| %>
+  <tr class="<%= service.status=="start" ? cycle(:sclist, :dclist) : "reedlist" %>">
+    <td><%= service.type_s %></td>
+    <td><%= service.city %></td>
+    <td><%= service.addr %></td>
+    <td><%= device_port_show_speed(service) %></td>
+    <td><%= service.vlan %></td>
+    <td><%= if service.type_s == 'one-ip'
+				link_to_function service.ipaddr, "ping_service(#{service.id})"
+			else
+				service.ipaddr 
+			end	%>
+	    <div id="div_ping_loss_<%=service.id%>"></div>
+	   </td>
+	<% 
+	host = CactiHost.where(hostname: service.device_ip)
+	graphs = host.empty? ? [] : host[0].cacti_graph.where(snmp_index: service.device_port )
+	local_graph_id = graphs.empty? ? nil : graphs[0].id  
+	port_label = service.port_label.nil? ? "port-"+service.device_port.to_s : service.port_label
+#		local_graph_id = nil
+ %>
+
+    <td>
+	     <!-- % = show_router_helper(service)% -->
+	     <div class="divwhite">
+<!-- = !service.port.nil? && !service.port.device.nil? && !service.port.device.perc.nil? && service.port.device.perc > 50 ? "divred" : "divwhite" % > -->
+	      <%= local_graph_id.nil? ? service.cl_port : link_to(service.device_nic,"telnet://#{service.device_ip}") +" " + link_to(port_label, "http://192.168.5.102/graph.php?action=view&rra_id=all&local_graph_id=#{local_graph_id}" ) %>
+	    </div>
+&nbsp;
+<!--        <div class=<= !service.port.nil? && service.port.status == 0 ? "divred" : "divwhite" >><= !service.port.nil? && service.port.status == 1 ? "UP" : "DOWN" ></div>  -->
+         <%= link_to tag("img", { :src => "/images/button_edit.gif", :alt => "Edit"}, false),"/services/#{service.serv_id}/edit?cl_id=#{params[:cl_id]}"%>
+         <%= link_to tag("img", {  :src => "/images/button_drop.gif", :alt => "Del"}, false), "/services/#{service.serv_id}?cl_id=#{params[:cl_id]}".html_safe, method: :delete, data: { confirm: 'Are you sure?' } %>
+     &nbsp;
+   <%=  if service.status=="start"
+          link_to tag("img", {  :src => "/images/stop.gif", :alt => "Stop"}, false), stop_service_path(service.serv_id,"service[status]"=>"stop"), data: { confirm: 'Are you sure?' }
+       else
+         link_to tag("img", {  :src => "/images/start.gif", :alt => "Start"}, false), start_service_path(service.serv_id,"service[status]"=>"start"), data: { confirm: 'Are you sure?' }
+       end
+    %>
+    </td>
+  </tr>
+<% end %>
+</table>
+
+<% if !@services_phone.empty? %>
+<p>
+<table width=70%>
+  <tr>
+    <td class=hblist><%= sortable "type_s", "Тип"%></td>
+    <td class=hblist><%= sortable "city", "Город"%></td>
+    <td class=hblist><%= sortable "addr", "Адрес"%></td>
+    <td class=hblist><%= sortable "speed", "Кол-во линий"%></td>
+    <td class=hblist><%= sortable "ipaddr", "Номера"%></td>
+    <td class=hblist colspan=2><%= sortable "port_id", "Порт оборудования"%></td>
+  </tr>
+
+<% @services_phone.each do |service| %>
+  <tr class="<%= cycle :sclist, :dclist %>">
+    <td><%= service.type_s %></td>
+    <td><%= service.city %></td>
+    <td><%= service.addr %></td>
+    <td align=center><%= service.speed %></td>
+    <td align=center><%= service.ipaddr %></td>
+	
+    <td>
+         <%= link_to tag("img", { :src => "/images/button_edit.gif", :alt => "Edit"}, false),"/services/#{service.serv_id}/edit?cl_id=#{params[:cl_id]}"%>
+         <%= link_to tag("img", {  :src => "/images/button_drop.gif", :alt => "Del"}, false), "/services/#{service.serv_id}?cl_id=#{params[:cl_id]}".html_safe, method: :delete, data: { confirm: 'Are you sure?' } %>
+     &nbsp;
+   <%  if service.status=="start"
+         link_to tag("img", {  :src => "/images/stop.gif", :alt => "Stop"}, false), services_path, data: { confirm: 'Are you sure?' }
+       else
+         link_to tag("img", {  :src => "/images/start.gif", :alt => "Start"}, false), services_path, data: { confirm: 'Are you sure?' }
+       end
+    %>
+    </td>
+  </tr>
+<% end %>
+</table>
+<% end %>

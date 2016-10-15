@@ -1,0 +1,55 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Serv:</b>
+  <%= @service.serv_id %>
+</p>
+
+<p>
+  <b>Cl:</b>
+  <%= @service.cl_id %>
+</p>
+
+<p>
+  <b>Type:</b>
+  <%= @service.type_s %>
+</p>
+
+<p>
+  <b>Addr:</b>
+  <%= @service.addr %>
+</p>
+
+<p>
+  <b>City:</b>
+  <%= @service.city %>
+</p>
+
+<p>
+  <b>Speed:</b>
+  <%= @service.speed %>
+</p>
+
+<p>
+  <b>Vlan:</b>
+  <%= @service.vlan %>
+</p>
+
+<p>
+  <b>Ipaddr:</b>
+  <%= @service.ipaddr %>
+</p>
+
+<p>
+  <b>Port:</b>
+  <%= @service.port_id %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%= @service.status %>
+</p>
+
+
+<%= link_to 'Edit', edit_service_path(@service) %> |
+<%= link_to 'Back', services_path %>

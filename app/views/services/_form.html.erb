@@ -1,0 +1,56 @@
+<%= form_for(@service) do |f| %>
+  <% if @service.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@service.errors.count, "error") %> prohibited this service from being saved:</h2>
+
+      <ul>
+      <% @service.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+<img src=/images/item.gif border=0>
+<table border=0>
+  <tr>
+    <td class=hblist>Тип</td>
+    <td class=hblist>Город</td>
+    <td class=hblist>Адрес</td>
+   <% if @service.type_s=='phone' %>
+    <td class=hblist>Кол-во линий</td>
+    <td class=hblist>Номера</td>
+   <% else %>
+    <td class=hblist>Скорость</td>
+    <td class=hblist>VLAN ID</td>
+    <td class=hblist>IP addr</td>
+  <% end %>
+    <td class=hblist colspan=2>Порт оборудования</td>
+  </tr>
+<tr>
+<td> <%= f.select(:type_s, srv_type_hash.keys.collect {|key| [srv_type_hash[key],key]}) %></td>
+<td><%= f.select(:city, srv_city_hash.keys.collect {|key| [srv_city_hash[key],key]}) %></td>
+   <%=datalist_addr.html_safe %>
+<td><%=f.text_field :addr, :list => 'addr'%></td>
+<td><%=f.text_field :speed, :size=>7 %></td>
+ <% 
+if not @service.type_s == 'phone' %>
+   <td><%=f.text_field :vlan, :size=>7 %></td>
+ <% end %>
+<td class=slist>
+ <% if @service.type_s == 'phone' %>
+   <%=datalist_free_phones.html_safe %>
+   <%= f.text_field :ipaddr, :list => 'free_phones' %>
+ <% else %>
+   <%= f.text_field :ipaddr, :size=>15 %>
+ <% end %>
+  <% if @service.type_s == 'one-ip' || @service.type_s == 'ipunnam' || @service.type_s == 'routable' %>
+    <br><%= f.text_field :pool, :size=>15 %>
+  <% end %>
+</td>
+<td class=small><%=f.select(:port_id, equipment_ports_array(@service.type_s), { style: "font-family : verdana; font-size : 6pt; width: 140px"})%></td>
+<td><%= f.submit 'Enter', class: "slist" %></td>
+</tr>
+</table>
+<%= hidden_field_tag :cl_id, params[:cl_id] %>
+<% end %>

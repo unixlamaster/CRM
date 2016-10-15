@@ -1,0 +1,50 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Nic:</b>
+  <%= @device.nic %>
+</p>
+
+<p>
+  <b>Perc:</b>
+  <%= @device.perc %>
+</p>
+
+<p>
+  <b>Delay:</b>
+  <%= @device.delay %>
+</p>
+
+<p>
+  <b>Last ch:</b>
+  <%= @device.last_ch %>
+</p>
+
+<p>
+  <b>Locat:</b>
+  <%= @device.locat %>
+</p>
+
+<p>
+  <b>Ip:</b>
+  <%= @device.ip %>
+</p>
+
+<p>
+  <b>Type:</b>
+  <%= @device.type %>
+</p>
+
+<p>
+  <b>Uptime:</b>
+  <%= @device.uptime %>
+</p>
+
+<p>
+  <b>Mac:</b>
+  <%= @device.mac %>
+</p>
+
+
+<%= link_to 'Edit', edit_device_path(@device) %> |
+<%= link_to 'Back', devices_path %>

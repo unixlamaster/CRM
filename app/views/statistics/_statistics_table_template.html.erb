@@ -1,0 +1,46 @@
+<table border=0 width=100% id="statistics" class="display"?
+  <thead>
+    <tr>
+      <td class=hblist>Неделя</td>
+      <% stat_name_hash[params[:otdel]].keys.each do |kk| %>
+        <td class=hblist><%= kk %></td>
+      <% end %>
+      <td class=hblist>#</td>
+    </tr>
+  </thead>
+
+  <tbody>
+
+  <% @stats.each do |stat| %>
+      <%= form_for(stat) do |f| %>
+      <tr class="<%= cycle :sclist, :dclist %>">
+        <td align=center><%= f.select(:week, week_list_hash.keys.collect {|key| [week_list_hash[key],key]}) %>
+          </td>
+        <% 1.upto(stat_name_hash[params[:otdel]].keys.length) do |i| %>
+          <td align=center><%= f.text_field "s#{i}", :onclick => "document.getElementById('submit#{stat.id}').style.display = '';", :size=>6 %></td>
+        <% end %>
+      <td align=center>
+       <%= link_to tag("img", {  :src => "/images/button_drop.gif", :alt => "Del"}, false), statistic_path(id: stat.id, otdel: stat.otdel) , method: :delete, data: { confirm: 'Are you sure?' } %>
+       &nbsp;
+       <%= f.submit "Save", :id => "submit#{stat.id}", :type => :image, :src => "/images/disk.png", style: 'display:none' %>
+       <%= f.hidden_field :otdel %>
+       </td>
+    </tr>
+    <% end %>
+  <% end %>
+
+      <%= form_for(@newstat) do |f| %>
+          <tr class="<%= cycle :sclist, :dclist %>">
+            <td align=center><%= f.select(:week, week_list_hash.keys.collect {|key| [week_list_hash[key],key]}) %></td>
+            <% 1.upto(stat_name_hash[params[:otdel]].keys.length) do |i| %>
+              <td align=center><%= f.text_field "s#{i}", :size=>6 %></td>
+            <% end %>
+        <td align=center>
+          <%= f.hidden_field :otdel %>
+         <%= f.submit "Save", :id => "submitnewstat", :type => :image, :src => "/images/disk.png" %>
+      </td>
+      </tr>
+      <% end %>
+
+  <tbody>
+</table>

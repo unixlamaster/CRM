@@ -1,0 +1,33 @@
+<h1>Listing ttmscomments</h1>
+
+<table>
+  <tr>
+    <th>Idcomment</th>
+    <th>Userid</th>
+    <th>Groupid</th>
+    <th>Time</th>
+    <th>Text</th>
+    <th>Idttms</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @ttmscomments.each do |ttmscomment| %>
+  <tr>
+    <td><%= ttmscomment.idcomment %></td>
+    <td><%= ttmscomment.userid %></td>
+    <td><%= ttmscomment.groupid %></td>
+    <td><%= ttmscomment.time %></td>
+    <td><%= ttmscomment.text %></td>
+    <td><%= ttmscomment.idttms %></td>
+    <td><%= link_to 'Show', ttmscomment %></td>
+    <td><%= link_to 'Edit', edit_ttmscomment_path(ttmscomment) %></td>
+    <td><%= link_to 'Destroy', ttmscomment, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Ttmscomment', new_ttmscomment_path %>

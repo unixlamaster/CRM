@@ -1,0 +1,38 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+
+<table width=100%><td><%= will_paginate @clients unless @clients.empty? %></td><td>
+<b>Количество - <%= @clients.count %></b>
+</td><td>
+<%= form_tag clients_path, :method => 'get' do %>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Найти", :name => nil %>
+<% end %>
+</td><td><%= link_to 'Добавить', new_client_path %></td></table>
+<table width=100%>
+  <tr>
+    <th class=hblist><%= sortable "name", "Название",{:search=>params[:search]}%></th>
+    <th class=hblist><%= sortable "address", "Адрес",{:search=>params[:search]}%></th>
+    <th class=hblist><%= sortable "manager", "Менеджер",{:search=>params[:search]}%></th>
+	<th class=hblist><%= sortable "dogovor_num", "Договор",{:search=>params[:search]}%></th>
+    <th class=hblist>Действия</th>
+  </tr>
+
+<% @clients.each do |client| %>
+  <tr class="<%= cycle :sclist, :dclist %>">
+    <td><%= link_to client.name, "/tasks/?cl_id=#{client.cl_id}" %></td>
+    <td><%= client.address %></td>
+    <td><%= client.manager %></td>
+	<td><%= client.dogovor_num %></td>
+    <td><%= link_to tag("img", { :src => "/images/button_edit.gif", :alt => "Edit", :border=>0, :title=>"Edit"}, false), edit_client_path(client.cl_id) %>
+    <%= link_to tag("img", { :src => "/images/button_drop.gif", :alt => "Del", :border=>0, :title=>"Del"}, false), client_path(client.cl_id), method: :delete, data: { confirm: 'Вы уверены?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @clients unless @clients.empty? %>

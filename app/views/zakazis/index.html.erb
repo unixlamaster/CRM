@@ -1,0 +1,37 @@
+<h1>Listing zakazis</h1>
+
+<table>
+  <tr>
+    <th>Idzakaz</th>
+    <th>Cl</th>
+    <th>Znum</th>
+    <th>Zdate</th>
+    <th>Fname</th>
+    <th>Type pril</th>
+    <th>Status</th>
+    <th>Service t</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @zakazis.each do |zakazi| %>
+  <tr>
+    <td><%= zakazi.idzakaz %></td>
+    <td><%= zakazi.cl_id %></td>
+    <td><%= zakazi.znum %></td>
+    <td><%= zakazi.zdate %></td>
+    <td><%= zakazi.fname %></td>
+    <td><%= zakazi.type_pril %></td>
+    <td><%= zakazi.status %></td>
+    <td><%= zakazi.service_t %></td>
+    <td><%= link_to 'Show', zakazi %></td>
+    <td><%= link_to 'Edit', edit_zakazi_path(zakazi) %></td>
+    <td><%= link_to 'Destroy', zakazi, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Zakazi', new_zakazi_path %>

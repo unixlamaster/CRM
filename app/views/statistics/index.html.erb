@@ -1,0 +1,10 @@
+ <% otdels_hash.keys.each do |otdel| %>
+   <%= params[:otdel] == otdel ? "<b>#{otdels_hash[otdel]}</b>".html_safe : link_to(otdels_hash[otdel], statistics_path(otdel: otdel)) %>
+ <% end %>
+ <p>
+ <%= if params[:otdel] == 'marketing'
+       render "statistics_table_marketing"
+     else
+       render "statistics_table_template" unless params[:otdel].nil? 
+     end
+     %>

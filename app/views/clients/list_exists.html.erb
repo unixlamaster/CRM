@@ -1,0 +1,32 @@
+<table width=100%><td><%= will_paginate @clients %></td><td>
+<b>Количество - <%= @clients.count.count %></b></td>
+<td>
+<%= form_tag "/clients/exists", :method => 'get' do %>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Найти", :name => nil %>
+<% end %>
+</td><td><%= link_to 'Добавить', new_client_path %></td></table>
+<table width=100%>
+  <tr>
+    <th class=hblist><%= sortable "name", "Название"%></th>
+    <th class=hblist><%= sortable "address", "Адрес"%></th>
+    <th class=hblist><%= sortable "manager", "Менеджер"%></th>
+	<th class=hblist><%= sortable "dogovor_num", "Договор"%></th>
+    <th class=hblist>Действия</th>
+  </tr>
+
+<% @clients.each do |client| %>
+  <tr class="<%= cycle :sclist, :dclist %>">
+    <td><%= link_to client.name, "/services/?cl_id=#{client.id}" %></td>
+    <td><%= client.address %></td>
+    <td><%= client.manager %></td>
+	<td><%= client.dogovor_num %></td>
+    <td><%= link_to tag("img", { :src => "/images/button_edit.gif", :alt => "Edit"}, false), edit_client_path(client) %>
+    <%= link_to tag("img", { :src => "/images/button_drop.gif", :alt => "Del"}, false), client, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @clients %>

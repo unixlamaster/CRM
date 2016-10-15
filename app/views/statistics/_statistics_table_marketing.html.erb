@@ -1,0 +1,35 @@
+<table border=1 width=100% id="statistics" class="display">
+  <thead>
+    <tr>
+      <td class=hblist>Неделя</td>
+      <td class=hblist>Источники</td>
+    </tr>
+  </thead>
+
+  <tbody>
+  <% logger.debug @stats.inspect %>
+  <% @stats.keys.each do |week| 
+     %>
+      <tr class="<%= cycle :sclist, :dclist %>">
+      <td align=center width=8%><%= week.strftime("%d.%m")+" - "+(week+4).strftime("%d.%m") %> </td>
+      <td align=center>
+        <% @stats[week][:arr].each do |kk| %>
+          <%= link_to kk.name+', сумма='+ kk.tflag+', источник - '+ client_source_hash[kk.client.cl_src], task_path(kk.idtask,cl_id:kk.cl_id) %><br>
+        <% end %>
+        <table width=100%><tr>
+           <% @stats[week][:all].keys.each do |src| %>
+             <td class="endtd"><%= client_source_hash[src] %></td>
+           <% end %>
+         </tr>
+         <tr>
+           <% @stats[week][:all].keys.each do |src| %>
+             <td class=""><%= @stats[week][:all][src] %></td>
+           <% end %>
+         </tr>
+       </table>
+      </td>
+    </tr>
+  <% end %>
+
+  </tbody>
+</table>

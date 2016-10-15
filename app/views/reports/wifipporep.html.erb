@@ -1,0 +1,148 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+
+<form>
+<table>
+<td align=right>
+<b>Клиент:<p>Одной страницей</b>
+</td><td>
+<%= select_tag :flag, options_for_select([["",""],["Цифровой Диалог","DD"],["Диалог Телеком","DT"]], params[:flag]) %><p>
+<input type=checkbox name=pg value="off" <%="checked" if params[:pg]=="off" %>>
+</td><td>
+         <select name=status[] multiple>
+                <option value=>
+              <%
+              task_status_hash.each do |key,str|
+               %>
+                      <option value=<%=key%> <%=" selected" if !params[:status].nil? && params[:status].include?(key) %> ><%=str%>
+
+              <% end %>
+         </select>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Найти", :name => nil %>
+</td></table>
+</form>
+<b>Количество - <%= @wifipporep.count %></b>
+<%= will_paginate @wifipporep if  params[:pg]!="off"  %>
+
+
+              <table border=0  style="background-color: #f5f5dc;">
+                <tr>
+                <th class=hblist rowspan=2 ><%= sortable "cl_name", "Клиент",{:search=>params[:search],:status=>params[:status]}%></th>
+                <th class=hblist rowspan=2 ><%= sortable "t_name", "Адрес",{:search=>params[:search],:status=>params[:status]}%></th>
+                <th class=hblist rowspan=2 ><%= sortable "manager", "Manager",{:search=>params[:search],:status=>params[:status]}%></th>
+                <th class=hblist rowspan=2 ><%= sortable "type_s", "Сервис",{:search=>params[:search],:status=>params[:status]}%></th>
+                <th class=hblist rowspan=2 ><%= sortable "target", "Скорость",{:search=>params[:search],:status=>params[:status]}%></th>
+                <th class=hblist colspan=2 >ППО-Карта</th>
+                <th class=hblist colspan=2 >ППО-Объект</th>
+                <th class=hblist colspan=2 >Согласование</th>
+                <th class=hblist colspan=2 >Договор</th>
+                <th class=hblist colspan=2 >Оплата</th>
+                <th class=hblist colspan=2 >Сервис</th>
+                <th class=hblist colspan=2 >АКТ</th>
+                </tr>
+                <tr>
+                <td class=hblist><%= sortable "t1cr", "Дата",{:search=>params[:search],:status=>params[:status]}%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t2cr", "Дата",{:search=>params[:search],:status=>params[:status]}%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t3cr", "Дата",{:search=>params[:search],:status=>params[:status]}%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t4cr", "Дата",{:search=>params[:search],:status=>params[:status]}%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t5cr", "Дата",{:search=>params[:search],:status=>params[:status]}%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t6cr", "Дата",{:search=>params[:search],:status=>params[:status]}%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t7cr", "Дата",{:search=>params[:search],:status=>params[:status]}%></td>
+                <td class=hblist>Рез-т</td>
+                </tr>
+  <% @wifipporep.each do |row|
+        cls = cycle :sclist, :dclist
+     %>
+       <tr>
+<td class="<%=cls%>"><%= link_to row.cl_name, "/tasks/?cl_id=#{row.cl_id}" %></td>
+<td class="<%=cls%>"><%= row.t_name[0..40] %></td>
+<td class="<%=cls%>"><%= row.manager.nil? ? "" : row.manager[0..20] %></td>
+<td class="<%=cls%>"><%= row.type_s %></td>
+<td class="<%=cls%>"><%= row.target[0..10] %></td>
+<% if row.t1s=='end' %>
+ <td class="<%=cls%>"><abbr title=<%=row.t1ch%>><%=row.t1cr.strftime("%Y-%m-%d")%></abbr></td>
+ <td class="grlist"><%=row.t1r%></td>
+<% elsif !row.t1s.nil? %>
+ <td class="<%=cls%>" align=center><%= row.t1cr.strftime("%Y-%m-%d") %></td>
+ <td class=redlist><%= ((Time.now.to_i-row.t1cr.to_i)/86400).to_i %>дн</td>
+<% else %>
+ <td class="<%=cls%>">&nbsp;</td>
+ <td class="<%=cls%>">&nbsp;</td>
+<% end %>
+<% if row.t2s=='end' %>
+ <td class="<%=cls%>"><abbr title=<%=row.t2ch%>><%=row.t2cr.strftime("%Y-%m-%d")%></abbr></td>
+ <td class="grlist"><%=row.t2r%></td>
+<% elsif !row.t2s.nil? %>
+ <td align=center class="<%=cls%>"><%= row.t2cr.strftime("%Y-%m-%d") %></td>
+ <td class=redlist><%= ((Time.now.to_i-row.t2cr.to_i)/86400).to_i %>дн</td>
+<% else %>
+ <td class="<%=cls%>">&nbsp;</td>
+ <td class="<%=cls%>">&nbsp;</td>
+<% end %>
+<% if row.t3s=='end' %>
+ <td class="<%=cls%>"><abbr title=<%=row.t3ch%>><%=row.t3cr.strftime("%Y-%m-%d")%></abbr></td>
+ <td class="grlist"><%=row.t3r%></td>
+<% elsif !row.t3s.nil? %>
+ <td align=center class="<%=cls%>"><%= row.t3cr.strftime("%Y-%m-%d")%></td>
+ <td class=redlist><%= ((Time.now.to_i-row.t3cr.to_i)/86400).to_i %>дн</td>
+<% else %>
+ <td class="<%=cls%>">&nbsp;</td>
+ <td class="<%=cls%>">&nbsp;</td>
+<% end %>
+<% if row.t4s=='end' %>
+ <td class="<%=cls%>"><abbr title=<%=row.t4ch%>><%=row.t4cr.strftime("%Y-%m-%d")%></abbr></td>
+ <td class="grlist"><%=row.t4r%></td>
+<% elsif !row.t4s.nil? %>
+ <td align=center class="<%=cls%>"><%= row.t4cr.strftime("%Y-%m-%d")%></td>
+ <td class=redlist><%= ((Time.now.to_i-row.t4cr.to_i)/86400).to_i %>дн</td>
+<% else %>
+ <td class="<%=cls%>">&nbsp;</td>
+ <td class="<%=cls%>">&nbsp;</td>
+<% end %>
+<% if row.t5s=='end' %>
+ <td class="<%=cls%>"><abbr title=<%=row.t5ch%>><%=row.t5cr.strftime("%Y-%m-%d")%></abbr></td>
+ <td class="grlist"><%=row.t5r%></td>
+<% elsif !row.t5s.nil? %>
+ <td class="<%=cls%>" align=center><%= row.t5cr.strftime("%Y-%m-%d")%></td>
+ <td class=redlist><%= ((Time.now.to_i-row.t5cr.to_i)/86400).to_i %>дн</td>
+<% else %>
+ <td class="<%=cls%>">&nbsp;</td>
+ <td class="<%=cls%>">&nbsp;</td>
+<% end %>
+
+<% if row.t6s=='end' %>
+ <td class="<%=cls%>"><abbr title=<%=row.t6ch%>><%=row.t6cr.strftime("%Y-%m-%d")%></abbr></td>
+ <td class="grlist"><%=row.t6r%></td>
+<% elsif !row.t6s.nil? %>
+ <td class="<%=cls%>" align=center><%= row.t6cr.strftime("%Y-%m-%d")%></td>
+ <td class=redlist><%= ((Time.now.to_i-row.t6cr.to_i)/86400).to_i %>дн</td>
+<% else %>
+ <td class="<%=cls%>">&nbsp;</td>
+ <td class="<%=cls%>">&nbsp;</td>
+<% end %>
+
+<% if row.t7s=='end' %>
+ <td class="<%=cls%>"><abbr title=<%=row.t7ch%>><%=row.t7cr.strftime("%Y-%m-%d")%></abbr></td>
+ <td class="grlist"><%=row.t7r%></td>
+<% elsif !row.t7s.nil? %>
+ <td class="<%=cls%>" align=center><%= row.t7cr.strftime("%Y-%m-%d")%></td>
+ <td class=redlist><%= ((Time.now.to_i-row.t7cr.to_i)/86400).to_i %>дн</td>
+<% else %>
+ <td class="<%=cls%>">&nbsp;</td>
+ <td class="<%=cls%>">&nbsp;</td>
+<% end %>
+      </tr>
+  <% end %>
+              </table>

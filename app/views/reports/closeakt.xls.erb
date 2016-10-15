@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+<Styles>
+  <Style ss:ID="bb">
+   <Font ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="white">
+   <Interior ss:Color="white" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="redlist">
+   <Interior ss:Color="red" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="yellowlist">
+   <Interior ss:Color="yellow" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="grlist">
+   <Interior ss:Color="#2e8b57" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="endtd">
+   <Interior ss:Color="#cadaba" ss:Pattern="Solid"/>
+  </Style>
+</Styles>
+
+  <Worksheet ss:Name="Sheet1">
+    <Table>
+      <Row>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Наименование клиента</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">№ Договора</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Сервис</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Дата оплаты</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Дата включения</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">АКТ в CRM</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Сумма Ежемес платежа</Data></Cell>
+      </Row>
+    <% @installrep.each do |row| 
+          pay_date = row.t5cr unless row.t5cr.nil?
+          pay_date = row.t5ch unless row.t5ch.nil?
+          pay_date = row.t5cl unless row.t5cl.nil?
+          install_date = row.t7cr unless row.t7cr.nil?
+          install_date = row.t7ch unless row.t7ch.nil?
+          install_date = row.t7res1date unless row.t7res1date.nil?
+          install_date = row.t7res2date unless row.t7res2date.nil?
+          install_date = row.t8cr unless row.t8cr.nil?
+          install_date = row.t8ch unless row.t8ch.nil?
+          install_date = row.t8res1date unless row.t8res1date.nil?
+      %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= row.cl_name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row.t4dog_num %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row.type_s %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= pay_date %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= install_date %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row.t9ch %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row.t4_e_pay %></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

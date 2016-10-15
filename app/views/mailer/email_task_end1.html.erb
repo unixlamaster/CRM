@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+ <b>Расторжение договора</b>
+<table><tr>
+<td>Клиент</td><td><%= @client.name %></td></tr>
+<tr><td>Адрес</td><td><%= @task.name %></td></tr>
+<tr><td>Договор</td><td><%= @task.dogovor_num %> от <%= @task.dogovor_date%></td></tr>
+<tr><td>Сервис</td><td><%= @task.type_s %></td></tr>
+<% if @task.type_s=~/Телефония/ %>
+       <tr><td><b>Количество линий</b></td><td><%=@task.target%></td></tr>
+<% else %>
+       <tr><td><b>Скорость:</b></td><td><%=@task.target%></td></tr>
+<% end %>
+</table>
+</body></html>

@@ -1,0 +1,99 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+
+  <%
+              wd= Time.now.wday==0 ? 6 : Time.now.wday-1
+              t0 = Time.now
+              t1 = Time.now - wd*3600*24 - 3600*24*7
+              t2 = Time.now - wd*3600*24 - 3600*24
+              t3 = Time.mktime(t0.year,t0.mon)-3600
+              t4 = Time.mktime(t3.year,t3.mon)
+              %>
+<a href=/reports/genrep?type_t[]=install&type_t[]=install1&status[]=new&status[]=run>Текущие инсталляции</a> |
+<a href=/reports/genrep?type_t[]=install&type_t[]=install1&status[]=end&d5=<%=t1.strftime("%Y-%m-%d")%>&d6=<%=t2.strftime("%Y-%m-%d")%>>Завершенные инсталляции за прошлую неделю</a> |
+<a href=/reports/genrep?type_t[]=sogl&status[]=new&status[]=run&status[]=clsogl>Лист согласований</a> |
+<a href=/reports/genrep?type_t[]=wifisogl&status[]=new&status[]=run>Лист согласований WiFi</a> |
+<a href=/reports/genrep?type_t[]=zakaz&status[]=end1>Расторжения</a> |
+<a href=/reports/genrep?type_t[]=wifizakaz&status[]=end1>Расторжения WiFi</a> |
+<a href=/reports/genrep?type_t[]=zakaz&status[]=new&status[]=run&status[]=end&d1=<%=t4.strftime("%Y-%m-%d")%>&d2=<%=t3.strftime("%Y-%m-%d")%>>Договора за прошлый месяц</a> |
+<a href=/reports/genrep?type_t%5B%5D=pay&status%5B%5D=new&status%5B%5D=run>Новые оплаты</a> |
+<a href=/reports/genrep?type_t[]=wifippomap&d1=<%=t1.strftime("%Y-%m-%d")%>&d2=<%=t2.strftime("%Y-%m-%d")%>>WiFi ППО-карты за пр.неделю</a> |
+<a href=/reports/genrep?type_t[]=wifippoobj&d1=<%=t1.strftime("%Y-%m-%d")%>&d2=<%=t2.strftime("%Y-%m-%d")%>>WiFi ППО-объекты за пр.неделю</a> |
+<a href=/reports/genrep?type_t[]=wifizakaz&status[]=end&d3=<%=t1.strftime("%Y-%m-%d")%>&d4=<%=t2.strftime("%Y-%m-%d")%>>WiFi подписанные договора за пр.неделю</a> |
+<a href=/reports/genrep?type_t[]=wifiinstall&d1=<%=t1.strftime("%Y-%m-%d")%>&d2=<%=t2.strftime("%Y-%m-%d")%>>WiFi Инсталляции за пр.неделю</a> |
+<a href=/reports/genrep?type_t[]=upgrade&status[]=new&status[]=run>Модернизации</a> |
+<form>
+<table><tr><td>Тип задач</td><td>
+         <select name=type_t[] multiple>
+                 <option value=>
+              <%
+              task_type_hash.each do |key,str|
+               %>
+                      <option value=<%=key%> <%=" selected" if !params[:type_t].nil? && params[:type_t].include?(key) %> ><%=str%>
+   
+              <% end %>
+         </select>
+</td><td>Статус</td><td>
+         <select name=status[] multiple>
+                <option value=>
+              <%
+              task_status_hash.each do |key,str|
+               %>
+                      <option value=<%=key%> <%=" selected" if !params[:status].nil? && params[:status].include?(key) %> ><%=str%>
+
+              <% end %>
+         </select>
+</td><td>Создание с <input type=date name=d1 value="<%=params[:d1]%>"> по <input type=date name=d2 value="<%=params[:d2]%>"><br>
+Изменения с <input type=date name=d3 value="<%=params[:d3]%>"> по <input type=date name=d4 value="<%=params[:d4]%>"><br>
+Закрытие с <input type=date name=d5 value="<%=params[:d5]%>"> по <input type=date name=d6 value="<%=params[:d6]%>"></td>
+<td>
+<%= select_tag :flag, options_for_select([["",""],["Цифровой Диалог","DD"],["Диалог Телеком","DT"]], params[:flag]) %><br>
+<%= text_field_tag :search, params[:search], :list => 'managers' %>
+ <%= submit_tag "Найти", :name => nil %>
+<% np = params.dup
+   np[:pg]="off"
+   rpath = reports_genrep_path(np).split('?')
+   rpath[0]+=".xls"
+      %>
+  <%= link_to tag("img", { :src => "/images/excel.gif", :alt => "Excel", :border=>0, :title=>"Excel"}, false), rpath.join('?') %>
+</td></td></table>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+<br>
+Одной страницей <input type=checkbox name=pg value="off" <%="checked" if params[:pg]=="off" %>>
+</form>
+<table width=100%>
+<td><%= will_paginate( @genreps) unless params[:pg]=="off" %></td><td>
+<b>Количество - <%= @genreps.count %></b></td>
+</table>
+<table width=100%>
+  <tr>
+    <td class=hblist><%= sortable "name", "Клиент", { :type_t => params[:type_t], :status => params[:status], :d1 => params[:d1], :d2 => params[:d2], :search => params[:search] } %></td>
+    <td class=hblist><%= sortable "address", "Адрес", { :type_t => params[:type_t], :status => params[:status], :d1 => params[:d1], :d2 => params[:d2], :search => params[:search] }%></td>
+    <td class=hblist><%= sortable "mng", "Менеджер", { :type_t => params[:type_t], :status => params[:status], :d1 => params[:d1], :d2 => params[:d2], :search => params[:search] }%></td>
+    <td class=hblist>Сервис</td>
+    <td class=hblist><%= sortable "d_cr", "Дата", { :type_t => params[:type_t], :status => params[:status], :d1 => params[:d1], :d2 => params[:d2], :search => params[:search] }%></td>
+    <td class=hblist><%= sortable "d_ch", "Дата изменения", { :type_t => params[:type_t], :status => params[:status], :d1 => params[:d1], :d2 => params[:d2], :search => params[:search] }%></td>
+    <td class=hblist><%= sortable "task_close", "Закрытие", { :type_t => params[:type_t], :status => params[:status], :d1 => params[:d1], :d2 => params[:d2], :search => params[:search] }%></td>
+    <td class=hblist><%= sortable "status", "Статус", { :type_t => params[:type_t], :status => params[:status], :d1 => params[:d1], :d2 => params[:d2], :search => params[:search] }%></td>
+    <td class=hblist><%= sortable "result", "Результат", { :type_t => params[:type_t], :status => params[:status], :d1 => params[:d1], :d2 => params[:d2], :search => params[:search] }%></td>
+  </tr>
+
+<% @genreps.each do |rep| %>
+  <tr class="<%= cycle :sclist, :dclist %>">
+    <td><%= link_to rep.name, tasks_path(cl_id: rep.cl_id,search: rep.address) %></td>
+    <td><%= link_to task_type_hash[rep.type_t]+" "+rep.address, task_path(rep.idtask,cl_id: rep.cl_id) %></td>
+    <td><%= rep.mng %></td>
+    <td><%= rep.type_s %> <%= rep.speed %></td>
+    <td><%= rep.d_cr %></td>
+    <td><%= rep.d_ch %></td>
+    <td><%= rep.task_close.strftime("%F") unless rep.task_close.nil? %></td>
+    <td bgcolor=<%= task_status_bgcolor(rep.status)%> align=center><%= task_status_hash[rep.status] %></td>
+    <td><%= rep.result %></td>
+  </tr>
+<% end %>
+</table>
+

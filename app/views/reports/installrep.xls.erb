@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+<Styles>
+  <Style ss:ID="bb">
+   <Font ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="white">
+   <Interior ss:Color="white" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="redlist">
+   <Interior ss:Color="red" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="yellowlist">
+   <Interior ss:Color="yellow" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="grlist">
+   <Interior ss:Color="#2e8b57" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="endtd">
+   <Interior ss:Color="#cadaba" ss:Pattern="Solid"/>
+  </Style>
+</Styles>
+
+  <Worksheet ss:Name="Sheet1">
+    <Table>
+      <Row>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Клиент</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Адрес</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Менеджер</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Договор от</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Оплата</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Линейные работы</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Сварка</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Инсталляция</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">АКТ</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Сумма инсталляции</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Сумма Ежемес платежа</Data></Cell>
+      </Row>
+    <% @installrep.each do |row| 
+        pay_day = row.t5cr.nil? ? 0 : (Date.today - row.t5cr).to_i
+        pay_color = if row.t5cr.nil? || row.t7s=='end' && row.t8s=='end'
+                       "white"
+                    elsif pay_day > 21
+                      "redlist"
+                    else
+                      "yellowlist"
+                    end
+      %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= row.cl_name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row.t_name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row.manager %></Data></Cell>
+<% if row.t4s=='end1' %>
+        <Cell ss:StyleID="redlist"><Data ss:Type="String">Расторжение</Data></Cell>
+<% else %>
+        <Cell><Data ss:Type="String"><%= row.t4dog_date unless row.t4dog_date.nil? %></Data></Cell>
+<% end %>
+        <Cell ss:StyleID="<%= pay_color%>"><Data ss:Type="String"><%= row.t5cr %></Data></Cell>
+     <% if row.t7s=='end' || row.t7s=='end0' %>
+        <Cell ss:StyleID="endtd"><Data ss:Type="String"><%= row.t7ch %></Data></Cell>
+     <% elsif row.t7s=='new' %>
+        <Cell ss:StyleID="redlist"><Data ss:Type="String"><%= row.t7res1date %></Data></Cell>
+     <% elsif row.t7s=='run' %>
+        <Cell ss:StyleID="grlist"><Data ss:Type="String"><%= row.t7res1date %></Data></Cell>
+     <% else %>
+        <Cell><Data ss:Type="String"></Data></Cell>
+     <% end %>
+     <% if row.t7s=='end' %>
+        <Cell ss:StyleID="endtd"><Data ss:Type="String"><%= row.t7ch %></Data></Cell>
+     <% elsif row.t7s=='new' %>
+        <Cell ss:StyleID="redlist"><Data ss:Type="String"><%= row.t7res2date %></Data></Cell>
+     <% elsif row.t7s=='run' %>
+        <Cell ss:StyleID="grlist"><Data ss:Type="String"><%= row.t7res2date %></Data></Cell>
+     <% else %>
+        <Cell><Data ss:Type="String"></Data></Cell>
+     <% end %>
+     <% if row.t8s=='end' %>
+        <Cell ss:StyleID="endtd"><Data ss:Type="String"><%= row.t8ch %></Data></Cell>
+     <% elsif row.t8s=='new' %>
+        <Cell ss:StyleID="redlist"><Data ss:Type="String"><%= row.t8res1date %></Data></Cell>
+     <% elsif row.t8s=='run' %>
+        <Cell ss:StyleID="grlist"><Data ss:Type="String"><%= row.t8res1date %></Data></Cell>
+     <% else %>
+        <Cell><Data ss:Type="String"></Data></Cell>
+     <% end %>
+
+     <% if row.t8s=='new' %>
+        <Cell ss:StyleID="redlist"><Data ss:Type="String"></Data></Cell>
+     <% elsif row.t8s=='run' %>
+        <Cell ss:StyleID="grlist"><Data ss:Type="String"></Data></Cell>
+     <% else %>
+        <Cell><Data ss:Type="String"></Data></Cell>
+     <% end %>
+        <Cell><Data ss:Type="Number"><%= row.t4_i_pay %></Data></Cell>
+        <Cell><Data ss:Type="Number"><%= row.t4_e_pay %></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

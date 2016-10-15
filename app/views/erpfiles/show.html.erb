@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Idfile:</b>
+  <%= @erpfile.idfile %>
+</p>
+
+<p>
+  <b>Idtask:</b>
+  <%= @erpfile.idtask %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @erpfile.name %>
+</p>
+
+<p>
+  <b>Userid:</b>
+  <%= @erpfile.userid %>
+</p>
+
+<p>
+  <b>Time:</b>
+  <%= @erpfile.time %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%= @erpfile.status %>
+</p>
+
+<p>
+  <b>Groupid:</b>
+  <%= @erpfile.groupid %>
+</p>
+
+
+<%= link_to 'Edit', edit_erpfile_path(@erpfile) %> |
+<%= link_to 'Back', erpfiles_path %>

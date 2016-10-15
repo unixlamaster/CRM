@@ -1,0 +1,46 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+
+<table width=100%>
+<td><%= will_paginate @freephones %></td><td>
+<b>Количество - <%= @freephones.count %></b></td>
+<td>
+<%= form_tag "/reports/freephones", :method => 'get' do %>
+        <select name=type_p[] multiple>
+              <option value=>
+              <% list_phone_type_array.each do |str| %>
+                  <option value=<%=str%> <%=" selected" if !params[:type_p].nil? && params[:type_p].include?(str) %> ><%=str%>
+              <% end %>
+        </select>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Найти", :name => nil %>
+<% end %>
+</td>
+<td>
+<% np = params.dup
+   rpath = reports_freephones_path(np).split('?')
+   rpath[0]+=".xls"
+      %>
+  <%= link_to tag("img", { :src => "/images/excel.gif", :alt => "Excel", :border=>0, :title=>"Excel"}, false), rpath.join('?') %>
+</td>
+</table>
+<table width=100%>
+  <tr>
+    <td class=hblist><%= sortable "phone", "Телефон",{:search=>params[:search],:type_p=>params[:type_p]}%></td>
+    <td class=hblist><%= sortable "type_p", "Тип",{:search=>params[:search],:type_p=>params[:type_p]}%></td>
+  </tr>
+
+<% @freephones.each do |serv| %>
+  <tr class="<%= cycle :sclist, :dclist %>">
+    <td><%= serv.phone %></td>
+    <td><%= serv.type_p %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @freephones %>

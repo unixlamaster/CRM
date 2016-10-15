@@ -1,0 +1,35 @@
+<h1>Listing ttmsfiles</h1>
+
+<table>
+  <tr>
+    <th>Idfile</th>
+    <th>Idttms</th>
+    <th>Name</th>
+    <th>Userid</th>
+    <th>Time</th>
+    <th>Status</th>
+    <th>Groupid</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @ttmsfiles.each do |ttmsfile| %>
+  <tr>
+    <td><%= ttmsfile.idfile %></td>
+    <td><%= ttmsfile.idttms %></td>
+    <td><%= ttmsfile.name %></td>
+    <td><%= ttmsfile.userid %></td>
+    <td><%= ttmsfile.time %></td>
+    <td><%= ttmsfile.status %></td>
+    <td><%= ttmsfile.groupid %></td>
+    <td><%= link_to 'Show', ttmsfile %></td>
+    <td><%= link_to 'Edit', edit_ttmsfile_path(ttmsfile) %></td>
+    <td><%= link_to 'Destroy', ttmsfile, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Ttmsfile', new_ttmsfile_path %>

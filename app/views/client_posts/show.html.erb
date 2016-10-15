@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Body:</b>
+  <%= @client_post.body %>
+</p>
+
+<p>
+  <b>Cl:</b>
+  <%= @client_post.cl_id %>
+</p>
+
+<p>
+  <b>Staff:</b>
+  <%= @client_post.staff_id %>
+</p>
+
+<p>
+  <b>Remind:</b>
+  <%= @client_post.remind %>
+</p>
+
+
+<%= link_to 'Edit', edit_client_post_path(@client_post) %> |
+<%= link_to 'Back', client_posts_path %>

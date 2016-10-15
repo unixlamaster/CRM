@@ -1,0 +1,19 @@
+<%= form_for(@gid2name) do |f| %>
+  <% if @gid2name.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@gid2name.errors.count, "error") %> prohibited this gid2name from being saved:</h2>
+
+      <ul>
+      <% @gid2name.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+       <label>Название группы</label><%= f.text_field :name %>
+    <%= f.submit %>
+  </div>
+<% end %>
+

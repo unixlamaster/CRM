@@ -1,0 +1,44 @@
+<%= form_for(@ttm) do |f| %>
+    <p>
+    <div class="viewttms">
+        <b><%= params[:action]=='edit' ? "Редактирование инцидента" : "Добавлние инцидента"%>
+       <p>
+       <table class=tab1>
+         <tr><td class=tab1_td1>Источник обращение</td><td><%= f.select(:source,ttms_source_hash.keys.collect {|key| [ttms_source_hash[key],key]}) %> </td></tr>
+         <tr><td class=tab1_td1>Дата/время обращения</td><td><input type=datetime-local name=ttm[time_create] value='<%=@open%>'></td></tr>
+         <tr><td class=tab1_td1>Дата/время закрытия</td><td><input type=datetime-local name=ttm[time_change] value='<%=@close%>'></td></tr>
+         <tr><td class=tab1_td1>Характер аварии</td><td>
+             <%= f.text_area :dsc, cols: 65, rows: 4 %>
+           </td>
+         </tr>
+         <tr><td class=tab1_td1>Причина и методы устранения</td><td>
+             <%= f.text_area :cause, cols: 65, rows: 4 %>
+           </td>
+         </tr>
+         <tr><td class=tab1_td1>Вывод</td><td>
+             <%= f.text_area :recap, cols: 65, rows: 4 %>
+           </td>
+         </tr>
+         <tr><td class=tab1_td1>Первопричина</td><td>
+               <%= f.select :root, ttms_root_list.collect {|key| [key,key]}, include_blank: true %>
+             </td>
+         </tr>
+          <tr>
+            <td class=tab1_td1>Статус</td>
+            <td>
+          <%= if @staff_login.admin? || @staff_login.groupid.include?(7)
+                  f.select(:status, ttms_status_hash.keys.collect {|key| [ttms_status_hash[key],key]})
+              else
+                ttms_status_hash[@ttm.status]
+              end %>
+            </td>
+          </tr>
+         <tr><td colspan=2>
+           <%=f.submit 'Enter'%>&nbsp;
+           <%= hidden_field_tag "ttm[cl_id]", params[:cl_id] %>
+           </td>
+         </tr>
+       </form>
+       </table>
+     </div>
+<% end %>

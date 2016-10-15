@@ -1,0 +1,221 @@
+<table width=80%>
+<td>Добавить
+<%= link_to 'ППО-карту', new_task_path(cl_id: params[:cl_id], type_t: default_user_task) %> /
+<%= link_to 'ППО-карту WiFi', new_task_path(cl_id: params[:cl_id], type_t: 'wifippomap') %> /
+<%= link_to 'Схему', new_task_path(cl_id: params[:cl_id], type_t: 'shem') %> /
+<%= link_to 'Расторжение', new_task_path(cl_id: params[:cl_id], type_t: 'zakaz', status: 'end1') %>
+</td></table>
+
+              <table border=0  style="background-color: #f5f5dc;">
+                <tr>
+                <th class=hblist rowspan=2 ><%= sortable "t_name", "Адрес",{:search=>params[:search],:status=>params[:status]}%></th>
+                <th class=hblist rowspan=2 ><%= sortable "type_s", "Сервис",{:search=>params[:search],:status=>params[:status]}%></th>
+                <th class=hblist rowspan=2 ><%= sortable "target", "Скорость",{:search=>params[:search],:status=>params[:status]}%></th>
+                <th class=hblist colspan=2 >ППО-Карта</th>
+                <th class=hblist colspan=2 >ППО-Объект</th>
+                <th class=hblist colspan=2 >Согласование</th>
+                <th class=hblist colspan=2 >Договор</th>
+                <th class=hblist colspan=2 >Оплата</th>
+                <th class=hblist colspan=2 >Схема</th>
+                <th class=hblist colspan=2 >ВОЛС</th>
+                <th class=hblist colspan=2 >Сервис</th>
+                <th class=hblist colspan=2 >АКТ</th>
+                </tr>
+                <tr>
+                <td class=hblist><%= sortable "t1cr", "Дата",{:search=>params[:search],:status=>params[:status]}%></td>
+                <td class=hblist width=20>Рез-т</td>
+                <td class=hblist><%= sortable "t2cr", "Дата",{:search=>params[:search],:status=>params[:status]}%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t3cr", "Дата",{:search=>params[:search],:status=>params[:status]}%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t4cr", "Дата",{:search=>params[:search],:status=>params[:status]}%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t5cr", "Дата",{:search=>params[:search],:status=>params[:status]}%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t6cr", "Дата",{:search=>params[:search],:status=>params[:status]}%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t7cr", "Дата",{:search=>params[:search],:status=>params[:status]}%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t8cr", "Дата",{:search=>params[:search],:status=>params[:status]}%></td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist><%= sortable "t9cr", "Дата",{:search=>params[:search],:status=>params[:status]}%></td>
+                <td class=hblist>Рез-т</td>
+                </tr>
+  <% @ppologs.each do |row|
+        cls = cycle :sclist, :dclist
+     %>
+       <tr>
+<td class="<%=cls%>"><%= row.t_name[0..40] %></td>
+<td class="<%=cls%>"><%= row.type_s %></td>
+<td class="<%=cls%>"><%= row.target[0..10] %></td>
+
+<% if row.t1s=='end' %>
+ <td class="<%=cls%>"><%= link_to row.t1cr.strftime("%y-%m-%d"), edit_ppo_log_path(row, :type_t => 'ppomap', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+ <td align=center class="grlist"><%= link_to row.t1r, edit_ppo_log_path(row, :type_t => 'ppomap', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% elsif !row.t1s.nil? %>
+ <td class="<%=cls%>" align=center><%= link_to row.t1cr.strftime("%y-%m-%d"), edit_ppo_log_path(row, :type_t => 'ppomap', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+ <td align=center class=redlist><%= link_to "#{((Time.now.to_i-row.t1cr.to_i)/86400).to_i}дн", edit_ppo_log_path(row, :type_t => 'ppomap', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% else %>
+ <td class="<%=cls%>">&nbsp;</td>
+ <td class="<%=cls%>">&nbsp;</td>
+<% end %>
+
+<% if row.t2s=='end' %>
+ <td class="<%=cls%>m"><%= link_to row.t2cr.strftime("%y-%m-%d"), edit_ppo_log_path(row, :type_t => 'ppoobj', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+ <td align=center class="grlist"><%= link_to row.t2r, edit_ppo_log_path(row, :type_t => 'ppoobj', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% elsif row.t2s=='stop' %>
+ <td align=center class="<%=cls%>m"><%= link_to row.t2cr.strftime("%y-%m-%d"), edit_ppo_log_path(row, :type_t => 'ppoobj', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+ <td align=center class="<%=cls%>m"><%= link_to "stop", edit_ppo_log_path(row, :type_t => 'ppoobj', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% elsif !row.t2s.nil? %>
+ <td align=center class="<%=cls%>"><%= link_to row.t2cr.strftime("%y-%m-%d"), edit_ppo_log_path(row, :type_t => 'ppoobj', :cl_id => params[:cl_id]), class: "ppolink"  unless row.t2cr.nil? %></td>
+ <td align=center class=redlist><%= link_to "#{((Time.now.to_i-row.t2cr.to_i)/86400).to_i}дн", edit_ppo_log_path(row, :type_t => 'ppoobj', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% else %>
+ <td class="<%=cls%>" colspan=2><%= reglament_button(row,'ppoobj') %></td>
+<% end %>
+
+<% if row.t3s=='end' %>
+ <td class="<%=cls%>"><%= link_to row.t3cr.strftime("%y-%m-%d"), edit_ppo_log_path(row, :type_t => 'sogl', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+ <td class="grlist" align=center><%= link_to row.t3r, edit_ppo_log_path(row, :type_t => 'sogl', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% elsif !row.t3s.nil? %>
+ <td align=center class="<%=cls%>"><%= link_to row.t3cr.strftime("%Y-%m-%d"), edit_ppo_log_path(row, :type_t => 'sogl', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+ <td class=redlist><%= link_to "#{((Time.now.to_i-row.t3cr.to_i)/86400).to_i}дн",edit_ppo_log_path(row, :type_t => 'sogl', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% else %>
+ <td class="<%=cls%>" colspan=2><%= reglament_button(row,'sogl') %></td>
+<% end %>
+
+<% if row.t4s=='end' %>
+ <td class="<%=cls%>"><%= link_to row.t4cr.strftime("%Y-%m-%d"), edit_ppo_log_path(row, :type_t => 'zakaz', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+ <td class="grlist" align=center><%= link_to row.t4r, edit_ppo_log_path(row, :type_t => 'zakaz', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% elsif !row.t4s.nil? %>
+ <td align=center class="<%=cls%>"><%= link_to row.t4cr.strftime("%Y-%m-%d"), edit_ppo_log_path(row, :type_t => 'zakaz', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+ <td class=redlist align=center><%= link_to "#{((Time.now.to_i-row.t4cr.to_i)/86400).to_i}дн", edit_ppo_log_path(row, :type_t => 'zakaz', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% else %>
+ <td class="<%=cls%>" colspan=2><%= reglament_button(row,'zakaz') %></td>
+<% end %>
+
+<% type_t = row.t5s=='nopay' ?  'nopay' : 'pay'
+   if row.t5s == 'end' || row.t5s == 'nopay' 
+  %>
+  <td class="<%=cls%>"><%= link_to row.t5cr.strftime("%Y-%m-%d"), edit_ppo_log_path(row, :type_t => type_t, :cl_id => params[:cl_id]), class: "ppolink" %></td>
+  <td class="grlist" align=center><%= link_to "#{row.t5r}", edit_ppo_log_path(row, :type_t => type_t, :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% elsif !row.t5s.nil? %>
+ <td class="<%=cls%>" align=center><%= link_to row.t5cr.strftime("%Y-%m-%d"), edit_ppo_log_path(row, :type_t => type_t, :cl_id => params[:cl_id]), class: "ppolink" %></td>
+ <td class=redlist><%= link_to "#{((Time.now.to_i-row.t5cr.to_i)/86400).to_i}дн", edit_ppo_log_path(row, :type_t => type_t, :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% else %>
+ <td class="<%=cls%>" colspan=2><%= reglament_button(row,'pay') %></td>
+<% end %>
+
+<% if row.t6s=='end' %>
+ <td class="<%=cls%>"><%= link_to row.t6cr.strftime("%Y-%m-%d"), edit_ppo_log_path(row, :type_t => 'shem', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+ <td class="grlist" align=center><%= link_to row.t6r, edit_ppo_log_path(row, :type_t => 'shem', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% elsif !row.t6s.nil? %>
+ <td class="<%=cls%>" align=center><%= link_to row.t6cr.strftime("%Y-%m-%d"), edit_ppo_log_path(row, :type_t => 'shem', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+ <td class=redlist align=center><%= link_to "#{((Time.now.to_i-row.t6cr.to_i)/86400).to_i}дн", edit_ppo_log_path(row, :type_t => 'shem', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% else %>
+ <td class="<%=cls%>" colspan=2><%= reglament_button(row,'shem') %></td>
+<% end %>
+
+<% if row.t7s=='end' %>
+ <td class="<%=cls%>"><%= link_to row.t7cr.strftime("%Y-%m-%d"), edit_ppo_log_path(row, :type_t => 'install', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+ <td class="grlist" align=center><%= link_to row.t7r, edit_ppo_log_path(row, :type_t => 'install', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% elsif !row.t7s.nil? %>
+ <td class="<%=cls%>" align=center><%= link_to row.t7cr.strftime("%Y-%m-%d"), edit_ppo_log_path(row, :type_t => 'nstall', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+ <td class=redlist align=center><%= link_to "#{((Time.now.to_i-row.t7cr.to_i)/86400).to_i}дн", edit_ppo_log_path(row, :type_t => 'install', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% else %>
+ <td class="<%=cls%>" colspan=2><%= reglament_button(row,'install') %></td>
+<% end %>
+
+<% if row.t8s=='end' %>
+ <td class="<%=cls%>"><%= link_to row.t8cr.strftime("%Y-%m-%d"), edit_ppo_log_path(row, :type_t => 'install1', :cl_id => params[:cl_id]), class: "ppolink"  unless row.t8cr.nil?%></td>
+ <td class="grlist" align=center><%= link_to row.t8r, edit_ppo_log_path(row, :type_t => 'install1', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% elsif !row.t8s.nil? %>
+ <td class="<%=cls%>" align=center><%= link_to row.t8cr.strftime("%Y-%m-%d"), edit_ppo_log_path(row, :type_t => 'install1', :cl_id => params[:cl_id]), class: "ppolink" unless row.t8cr.nil?%></td>
+ <td class=redlist align=center><%= link_to "#{((Time.now.to_i-row.t8cr.to_i)/86400).to_i}дн", edit_ppo_log_path(row, :type_t => 'install1', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% else %>
+ <td class="<%=cls%>" colspan=2><%= reglament_button(row,'install1') %></td>
+<% end %>
+
+<% if row.t9s=='end' %>
+  <td class="<%=cls%>"><%= link_to row.t9cr.strftime("%Y-%m-%d"), edit_ppo_log_path(row, :type_t => 'akt', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+  <td class="grlist" align=center><%= link_to row.t9r, edit_ppo_log_path(row, :type_t => 'akt', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% elsif !row.t9s.nil? %>
+   <td class="<%=cls%>" align=center><%= link_to row.t9cr.strftime("%Y-%m-%d"), edit_ppo_log_path(row, :type_t => 'akt', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+  <td class=redlist align=center><%= link_to "#{((Time.now.to_i-row.t9cr.to_i)/86400).to_i}дн", edit_ppo_log_path(row, :type_t => 'akt', :cl_id => params[:cl_id]), class: "ppolink" %></td>
+<% else %>
+  <td class="<%=cls%>" colspan=2><%= reglament_button(row,'akt') %></td>
+<% end %>
+
+      </tr>
+  <% 
+   @comments = Comment.where(idtask: Task.where(point_group:row.point_group))
+   @files = Erpfile.where(idtask: Task.where(point_group:row.point_group))
+   unless @comments.nil? 
+   %>
+      <tr><td colspan=3>
+           <div id=butplus<%=row.point_group%> ><a href=#"divcomment<%=row.point_group%>" onclick="divcomment<%=row.point_group%>.style.display='';butplus<%=row.point_group%>.style.display='none';butminus<%=row.point_group%>.style.display='';"><img border=0 src=/images/plus.gif></a></div>
+           <div id=butminus<%=row.point_group%> style="display:none"><a href=# onclick="divcomment<%=row.point_group%>.style.display='none';butplus<%=row.point_group%>.style.display='';butminus<%=row.point_group%>.style.display='none';"><img border=0 src=/images/minus.gif></a></div>
+        </td></tr>
+      <tr><td colspan=21 class=endtd><div id="divcomment<%=row.point_group%>" style="display:none">
+            <div style="float:left; width:60% ">
+            <% @comments.each do |com|
+              %>
+                 <%= com.text.html_safe %>
+		 <b>=<%= com.auth.surname %></b>
+		 <%= com.time.strftime("%Y-%m-%d") %> <br>
+            <%
+               end
+             %>
+                <a name="divcomment<%=row.point_group%>"></a>
+                Комментарий:<br>
+                <%= form_for(@comment) do |f| %>
+                  <%= f.text_area :text, cols: 45, rows: 7%>
+                  <%= hidden_field_tag "comment[idtask]", row.id %>
+                  <%= hidden_field_tag :cl_id, params[:cl_id] %>
+                  <%= f.submit 'Добавить коммент'%>
+                <% end %>
+            </div>
+            <div style="float:left;width:50px">&nbsp;</div>
+            <div style="float:left">
+              <b>Файлы:</b>
+              <a class=menu1 href=# onclick="divattache<%=row.point_group%>.style.display='';">
+                <%= tag("img",{:src=>"/images/button_attache.png", :title=>"Прикрепить", :border=>0}, false)%>
+              </a>
+              <div id=divattache<%=row.point_group%> style="display:none;">
+                  <%= form_for(@erpfile) do |f| %>
+                    <%= hidden_field_tag "erpfile[idtask]", row.id %>
+                    <%= hidden_field_tag "erpfile[userid]", @staff_login.id %>
+                    <%= hidden_field_tag "erpfile[groupid]", @staff_login.groupid.min %>
+                    <%= hidden_field_tag :cl_id, params[:cl_id] %>
+                    <%= hidden_field_tag "sessid" %>
+                    File:
+                    <%= f.file_field :file, :size=>40 %>
+                    <p>
+                    <%= f.submit "Upload It!" %><p>
+                  <% end %>
+              </div>
+              <br>
+              <% @files.each do |erpfile|
+                   if erpfile.status=='new'
+                   %>
+                     <%= link_to erpfile.name, erpfile_path(erpfile) %>
+                     <%= link_to tag("img",{:src=>"/images/button_drop.gif", :title=>"Удалить",:border=>0},false), erpfile_path(erpfile,cl_id: params[:cl_id]), method: :delete, data: { confirm: 'Are you sure?' } %>
+                     <%
+                   else
+                     %>
+                     <del><%= erpfile.name%></del>
+                   <%
+                   end
+                     %>
+                   <br>*** <b><%= Auth.find(erpfile.userid).surname%></b> <%= erpfile.time.getlocal.strftime("%Y-%m-%d %H:%M")%><br>
+                  <%
+                 end
+                 %>
+            </div>
+          </div>
+          </td>
+          
+      </tr>
+  <%
+  end
+end %>
+              </table>

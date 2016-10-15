@@ -1,0 +1,45 @@
+<%= form_for(@ttmsfile) do |f| %>
+  <% if @ttmsfile.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@ttmsfile.errors.count, "error") %> prohibited this ttmsfile from being saved:</h2>
+
+      <ul>
+      <% @ttmsfile.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :idfile %><br />
+    <%= f.number_field :idfile %>
+  </div>
+  <div class="field">
+    <%= f.label :idttms %><br />
+    <%= f.number_field :idttms %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :userid %><br />
+    <%= f.number_field :userid %>
+  </div>
+  <div class="field">
+    <%= f.label :time %><br />
+    <%= f.datetime_select :time %>
+  </div>
+  <div class="field">
+    <%= f.label :status %><br />
+    <%= f.text_field :status %>
+  </div>
+  <div class="field">
+    <%= f.label :groupid %><br />
+    <%= f.number_field :groupid %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

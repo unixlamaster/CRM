@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Cr time:</b>
+  <%= @mng_log.cr_time %>
+</p>
+
+<p>
+  <b>Who:</b>
+  <%= @mng_log.who %>
+</p>
+
+<p>
+  <b>Text:</b>
+  <%= @mng_log.text %>
+</p>
+
+
+<%= link_to 'Edit', edit_mng_log_path(@mng_log) %> |
+<%= link_to 'Back', mng_logs_path %>

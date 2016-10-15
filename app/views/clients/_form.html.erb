@@ -1,0 +1,112 @@
+<%= form_for(@client) do |f| %>
+  <% if @client.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@client.errors.count, "error") %> prohibited this client from being saved:</h2>
+
+      <ul>
+      <% @client.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+        <p>
+        <table class=viewtask ><td>
+        <table class=tab1>
+         <tr>
+           <td class=tab1_td1>Название:</td>
+           <td><%= f.text_field :name, :size => 50 %></td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>Адрес</td>
+           <td>
+<%= datalist_addr.html_safe() %>
+<%= f.text_field :address, :list => 'addr', :size => 50 %>
+           </td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>Адрес регистрации</td>
+           <td>
+<%= datalist_addr.html_safe() %>
+<%= f.text_field :registr_addr, :list => 'addr', :size => 50 %>
+           </td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>ИНН:</td>
+           <td><%= f.text_field :inn, :size => 50%></td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>Контакт по коммерческим вопросам:</td>
+           <td><%= f.text_field :contact, :size => 50%></td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>Контакт по техническим вопросам:</td>
+           <td><%= f.text_field :contact_tech, :size => 50%></td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>Время работы:</td>
+           <td><input type=time name="client[time_from]" value="<%=@time_from%>"> - <input type=time name="client[time_to]" value="<%=@time_to%>"></td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>EMail по коммерческим вопросам:</td>
+           <td><%= f.text_field :email, :size => 50%></td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>EMail по техническим вопросам:</td>
+           <td><%= f.text_field :email_tech, :size => 50%></td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>Менеджер:</td><td>
+             <%= f.text_field :manager, :size => 50%>
+        </td> </tr>
+         <tr>
+           <td class=tab1_td1>Источник клиента:</td>
+           <td><%= f.select :cl_src, client_source_hash.keys.collect {|key| [client_source_hash[key],key]}, include_blank: true %></td>
+         </tr>	
+<% if @staff_login.admin? %>
+         <tr>
+           <td class=tab1_td1>Группа компаний:</td>
+           <td><%= f.select :flag, client_DDDT_hash.keys.collect {|key| [client_DDDT_hash[key],key]}%></td>
+         </tr>
+<% else %>
+  <%= f.hidden_field :flag %>
+<% end %>
+<% if @staff_login.groupid.include?(8) %>
+         <tr>
+           <td class=tab1_td1>Вариант подключения:</td>
+           <td><%= f.select :connect_type, connect_type_array.collect {|val| [val,val]} %></td>
+         </tr>
+<% end %>
+         <tr>
+           <td class=tab1_td1>Описание:</td>
+           <td><%= f.text_area :remark, cols: 65, rows: 2%></td>
+         </tr>
+        <tr>
+           <td class=tab1_td1>Дата добавления:</td><td>
+           <input type=date name="client[date_add]" value="<%=@client.date_add.nil? ? "" : @client.date_add.strftime("%F")%>"> Дата отключения
+           <input type=date name="client[date_close]" value="<%=@client.date_close%>">
+          </td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>Номер для автоматичесих уведомлений:</td>
+           <td><%= f.text_field :notificate_phone, :size => 50%></td>
+         </tr>
+        <tr>
+           <td class=tab1_td1>Номер для SMS уведомлений:</td>
+           <td><%= f.text_field :notificate_sms, :size => 50%></td>
+         </tr>
+
+        <tr>
+           <td class=tab1_td1>Дата атоматического уведомления:</td><td>
+           <input type=date name="client[notificate_date]" value="<%=@client.notificate_date.nil? ? "" : @client.notificate_date.strftime("%F")%>">
+          </td>
+         </tr>
+         <tr>
+           <td class=tab1_td1>Результат автоматического уведомления:</td>
+           <td><%= @client.notificate_result %></td>
+         </tr>
+     <tr><td colspan=2 align=right><%= f.submit %>&nbsp;</td></tr>
+   </table>
+<% end %>

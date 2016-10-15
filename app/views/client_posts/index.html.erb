@@ -1,0 +1,38 @@
+  <% if flash[:error] %>
+        <div id="error_explanation">
+        <ul><li><%= flash[:error] %></li></ul>
+      </div>
+    <% end %>
+
+ <table width=100%><td><%= will_paginate @client_posts %></td><td>
+ <b>Количество - <%= @client_posts.count %></b>
+      </td><td>
+      <%= form_tag client_posts_path(:cl_id => params[:cl_id]), :method => 'get' do %>
+            <%= hidden_field_tag :direction, params[:direction] %>
+            <%= hidden_field_tag :sort, params[:sort] %>
+            <%= text_field_tag :search, params[:search] %>
+            <%= submit_tag "Найти", :name => nil %>
+    <% end %>
+    </td><td><%= link_to 'Добавить', new_client_post_path(:cl_id => params[:cl_id]) %></td></table>
+   <table width=100%>
+      <tr>
+          <th class=hblist width=10%><%= sortable "staff_id", "Автор",{:search=>params[:search]}%></th>
+          <th class=hblist width=10%><%= sortable "created_at", "Добавлен",{:search=>params[:search]}%></th>
+          <th class=hblist width=60%>Текст</th>
+          <th class=hblist width=10%><%= sortable "remind", "Напоминание",{:search=>params[:search]}%></th>
+          <th class=hblist width=10%>Действия</th>
+        </tr>
+
+        <% @client_posts.each do |row| %>
+            <tr class="<%= cycle :sclist, :dclist %>">
+            <td><%= row.auth.surname %></td>
+            <td><%= row.created_at.strftime("%F") %></td>
+            <td><%= row.body %></td>
+            <td><%= row.remind.strftime("%Y-%m-%d %H:%M") unless row.remind.nil? %></td>
+            <td><%= link_to tag("img", { :src => "/images/button_edit.gif", :alt => "Edit", :border=>0, :title=>"Edit"}, false), edit_client_post_path(row,cl_id: params[:cl_id]) %>
+          </td>
+          </tr>
+        <% end %>
+      </table>
+
+      <%= will_paginate @client_posts %>

@@ -1,0 +1,15 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+
+
+<%
+  [89,74,122,95,138,149,150,102,142,143,144,145,146,147,148].each do |uid|
+#  AuthGroups.where("gid=3 or gid=6").each do |staff|
+  %>
+   <%=tag("img", { :src => "/graphs/#{uid}.png", :alt => "Statistics", :border=>0, :title=>"Statistics"}, false) %>
+  <%
+  end
+    %>

@@ -1,0 +1,49 @@
+<%= form_for(@zakazi) do |f| %>
+  <% if @zakazi.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@zakazi.errors.count, "error") %> prohibited this zakazi from being saved:</h2>
+
+      <ul>
+      <% @zakazi.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :idzakaz %><br />
+    <%= f.number_field :idzakaz %>
+  </div>
+  <div class="field">
+    <%= f.label :cl_id %><br />
+    <%= f.number_field :cl_id %>
+  </div>
+  <div class="field">
+    <%= f.label :znum %><br />
+    <%= f.number_field :znum %>
+  </div>
+  <div class="field">
+    <%= f.label :zdate %><br />
+    <%= f.date_select :zdate %>
+  </div>
+  <div class="field">
+    <%= f.label :fname %><br />
+    <%= f.text_field :fname %>
+  </div>
+  <div class="field">
+    <%= f.label :type_pril %><br />
+    <%= f.text_field :type_pril %>
+  </div>
+  <div class="field">
+    <%= f.label :status %><br />
+    <%= f.text_field :status %>
+  </div>
+  <div class="field">
+    <%= f.label :service_t %><br />
+    <%= f.text_field :service_t %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

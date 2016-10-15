@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+  <table>
+  <tr><td><b>Организация:</b></td><td><%=@client.name%></td></tr>
+  <tr><td><b>Адрес:</b></td><td><%=@client.address%></td></tr>
+  <tr><td><b>Менеджер:</b></td><td><%=@client.manager%></td></tr>
+  <tr><td><b>Источник клиента:</b></td><td><%=@client.cl_src%></td></tr>
+  <tr><td><b>Доход:</b></td><td><%=@client.income%></td></tr>
+  <tr><td>URL:</td><td><%= link_to "CRM", "http://mng.di-di.ru/tasks/?cl_id=#{@client.id}" %></td></tr>
+  </table>
+</body></html>

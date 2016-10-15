@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+<Styles>
+  <Style ss:ID="bb">
+   <Font ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="white">
+   <Interior ss:Color="white" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="red">
+   <Interior ss:Color="red" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="yellowlist">
+   <Interior ss:Color="yellow" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="green">
+   <Interior ss:Color="#2e8b57" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="endtd">
+   <Interior ss:Color="#cadaba" ss:Pattern="Solid"/>
+  </Style>
+</Styles>
+
+  <Worksheet ss:Name="Sheet1">
+    <Table>
+<Column ss:AutoFitWidth="1"/>
+      <Row>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Название</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Сервис</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Ежем. платёж</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Номер договора</Data></Cell>
+        <Cell ss:StyleID="bb"><Data ss:Type="String">Дата договора</Data></Cell>
+      </Row>
+    <% @profitlist.each do |row| 
+      %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= row.name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row.speed %></Data></Cell>
+        <Cell><Data ss:Type="Number"><%= row.pay %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row.dogovor_num %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= row.dogovor_date %></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

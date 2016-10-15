@@ -1,0 +1,43 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+Report <%= @rep_num %>
+
+<% case @rep_num
+ when "2"
+  %>
+              <table width=100% border=0  style="background-color: #f5f5dc;">
+                <tr>
+                <td class=hblist rowspan=2 width=10%>Клиент</td>
+                <td class=hblist rowspan=2 width=20%>Адрес</td>
+                <td class=hblist rowspan=2 width=5%>Manager</td>
+                <td class=hblist rowspan=2 size=5%>Скорость</td>
+                <td class=hblist colspan=2 width=12%>ППО-Карта</td>
+                <td class=hblist colspan=2 width=12%>ППО-Объект</td>
+                <td class=hblist colspan=2 width=12%>Схема</td>
+                <td class=hblist colspan=2 width=12%>ВОЛС</td>
+                <td class=hblist colspan=2 width=12%>Сервис</td>
+                </tr>
+                <tr>
+                <td class=hblist>Дата</td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist>Дата</td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist>Дата</td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist>Дата</td>
+                <td class=hblist>Рез-т</td>
+                <td class=hblist>Дата</td>
+                <td class=hblist>Рез-т</td>
+                </tr>
+              </table>
+<% 
+
+ else
+ %>
+Rep not found
+<%
+end
+ %>

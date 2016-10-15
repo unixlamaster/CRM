@@ -1,0 +1,30 @@
+<table width=100%><td>
+<b>
+<%= form_tag mng_logs_path, :method => 'get' do %>
+Дата c <input type=date name=d1 value="<%=@d1%>"> по <input type=date name=d2 value="<%=@d2%>"></b>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Найти", :name => nil %>
+<% end %>
+<%= will_paginate @clients unless params[:pg]=="off"%>
+</td>
+</table>
+<table width=100%>
+  <tr>
+    <th class=hblist width=10%><%= sortable "cr_time", "Дата",{:search=>params[:search]}%></th>
+    <th class=hblist><%= sortable "who", "Кто",{:search=>params[:search]}%></th>
+    <th class=hblist><%= sortable "text", "Действие",{:search=>params[:search]}%></th>
+  </tr>
+
+<% @mng_logs.each do |mng_log|
+     cls = cycle :sclist, :dclist
+    %>
+  <tr>
+    <td width=10% class="<%=cls%>"><%= mng_log.cr_time.strftime("%Y-%m-%d %H:%M") %></td>
+    <td class="<%=cls%>"><%= mng_log.who %></td>
+    <td class="<%=cls%>"><%= mng_log.text %></td>
+  </tr>
+<% end %>
+</table>
+

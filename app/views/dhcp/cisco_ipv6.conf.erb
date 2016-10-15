@@ -1,0 +1,5 @@
+<% @services.each do |serv| %>
+int Gi0/2.<%= serv.vlan %>
+ ipv6 address <%= serv.ipaddr.chomp %>/64 
+exit
+<% end %>

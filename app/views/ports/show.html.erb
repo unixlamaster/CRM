@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Idport:</b>
+  <%= @port.idport %>
+</p>
+
+<p>
+  <b>Nic:</b>
+  <%= @port.nic %>
+</p>
+
+<p>
+  <b>Port:</b>
+  <%= @port.port %>
+</p>
+
+<p>
+  <b>Time ch:</b>
+  <%= @port.time_ch %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%= @port.status %>
+</p>
+
+<p>
+  <b>Label:</b>
+  <%= @port.label %>
+</p>
+
+<p>
+  <b>Trap:</b>
+  <%= @port.trap %>
+</p>
+
+<p>
+  <b>Cacti url:</b>
+  <%= @port.cacti_url %>
+</p>
+
+
+<%= link_to 'Edit', edit_port_path(@port) %> |
+<%= link_to 'Back', ports_path %>

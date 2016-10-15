@@ -1,0 +1,45 @@
+<%= form_for(@erpfile) do |f| %>
+  <% if @erpfile.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@erpfile.errors.count, "error") %> prohibited this erpfile from being saved:</h2>
+
+      <ul>
+      <% @erpfile.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :idfile %><br />
+    <%= f.number_field :idfile %>
+  </div>
+  <div class="field">
+    <%= f.label :idtask %><br />
+    <%= f.number_field :idtask %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :userid %><br />
+    <%= f.number_field :userid %>
+  </div>
+  <div class="field">
+    <%= f.label :time %><br />
+    <%= f.datetime_select :time %>
+  </div>
+  <div class="field">
+    <%= f.label :status %><br />
+    <%= f.text_field :status %>
+  </div>
+  <div class="field">
+    <%= f.label :groupid %><br />
+    <%= f.number_field :groupid %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

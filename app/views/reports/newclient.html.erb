@@ -1,0 +1,46 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+<form>
+<table width=100%>
+<td><b>
+Новые клиенты c <input type=date name=d1 value="<%=@d1%>"> по <input type=date name=d2 value="<%=@d2%>"></b>
+<%= select_tag :flag, options_for_select([["",""],["Цифровой Диалог","DD"],["Диалог Телеком","DT"]], params[:flag]) %>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= submit_tag "Найти", :name => nil %>
+    <% rpath = reports_newclient_path(params).split('?')
+       rpath[0]+=".xls"
+      %>
+    <%= link_to tag("img", { :src => "/images/excel.gif", :alt => "Excel", :border=>0, :title=>"Excel"}, false), rpath.join('?') %>
+</td><td><%= link_to 'Добавить', new_client_path %></td></table>
+</form>
+<b>Количество - <%= @cl_ppo.count %></b>
+<table width=100%>
+  <tr>
+    <td class=hblist><%= sortable "name", "Название", { :d1 => @d1, :d2 => @d2, :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist><%= sortable "address", "Адрес", { :d1 => @d1, :d2 => @d2, :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist><%= sortable "type_s", "Сервис", { :d1 => @d1, :d2 => @d2, :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist><%= sortable "target", "Скорость", { :d1 => @d1, :d2 => @d2, :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist><%= sortable "cl_src", "Источник", { :d1 => @d1, :d2 => @d2, :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist><%= sortable "manager", "Менеджер", { :d1 => @d1, :d2 => @d2, :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist><%= sortable "date_add", "Добавлен", { :d1 => @d1, :d2 => @d2, :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist>Действия</td>
+  </tr>
+
+<% @cl_ppo.each do |client| %>
+  <tr class="<%= cycle :sclist, :dclist %>">
+    <td><%= link_to client.name, "/tasks/?cl_id=#{client.id}" %></td>
+    <td><%= client.t_name.nil? ? client.address : client.t_name %></td>
+    <td><%= client.type_s %></td>
+    <td><%= client.target %></td>
+    <td><%= client_source_hash[client.cl_src] %></td>
+    <td><%= client.manager %></td>
+    <td><%= client.date_add.strftime("%Y-%m-%d") %></td>
+    <td><%= link_to tag("img", { :src => "/images/button_edit.gif", :alt => "Edit", :border=>0, :title=>"Edit"}, false), edit_client_path(client) %>
+    <%= link_to tag("img", { :src => "/images/button_drop.gif", :alt => "Del", :border=>0, :title=>"Del"}, false), client, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>

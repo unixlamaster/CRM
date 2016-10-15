@@ -1,0 +1,42 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% end %>
+<form>
+<table width=100%>
+<td><b>
+Новые договора c <input type=date name=d1 value="<%=@d1%>"> по <input type=date name=d2 value="<%=@d2%>"></b>
+<%= select_tag :flag, options_for_select([["",""],["Цифровой Диалог","DD"],["Диалог Телеком","DT"]], params[:flag]) %>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= submit_tag "Найти", :name => nil %>
+    <% rpath = reports_newzakaz_path(params).split('?') %>
+    <%= link_to tag("img", { :src => "/images/excel.gif", :alt => "Excel", :border=>0, :title=>"Excel"}, false), rpath.join('.xls?') %>
+</td></table>
+</form>
+<table width=100%>
+  <tr>
+    <td class=hblist><%= sortable "name", "Название", { :d1 => @d1, :d2 => @d2, :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist><%= sortable "address", "Адрес", { :d1 => @d1, :d2 => @d2, :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist>Сервис</td>
+    <td class=hblist><%= sortable "manager", "Менеджер", { :d1 => @d1, :d2 => @d2, :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist><%= sortable "cl_src", "Источник", { :d1 => @d1, :d2 => @d2, :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist><%= sortable "date_add", "Дата", { :d1 => @d1, :d2 => @d2, :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist><%= sortable "ipay", "Инсталляция", { :d1 => @d1, :d2 => @d2, :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist><%= sortable "epay", "Абоненская", { :d1 => @d1, :d2 => @d2, :search => params[:search], :flag => params[:flag] }%></td>
+  </tr>
+
+<% @cl_ppo.each do |client| %>
+  <tr class="<%= cycle :sclist, :dclist %>">
+    <td><%= link_to client.name, "/tasks/?cl_id=#{client.id}" %></td>
+    <td><%= client.address %></td>
+    <td><%= client.type_s %> <%= client.target %></td>
+    <td><%= client.manager %></td>
+    <td><%= client.cl_src %></td>
+    <td><%= client.date_add.nil? ? "" : client.date_add.strftime("%Y-%m-%d") %></td>
+    <td><%= client.ipay %></td>
+    <td><%= client.epay %></td>
+  </tr>
+<% end %>
+</table>

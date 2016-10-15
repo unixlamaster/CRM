@@ -1,0 +1,45 @@
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <ul><li><%= flash[:error] %></li></ul>
+    </div>
+  <% else %>
+<form>
+<table>
+<td><b>
+Профит-Лист
+<%= select_tag :flag, options_for_select([["",""],["Цифровой Диалог","DD"],["Диалог Телеком","DT"]], params[:flag]) %>
+    <%= hidden_field_tag :direction, params[:direction] %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Найти", :name => nil %>
+<% params[:pg]="off"
+   rpath = reports_profitlistrep_path(params).split('?')
+   rpath[0]+=".xls"
+      %>
+  <%= link_to tag("img", { :src => "/images/excel.gif", :alt => "Excel", :border=>0, :title=>"Excel"}, false), rpath.join('?') %>
+</td> </table>
+</form>
+<%= will_paginate @profitlist %>
+<b> Количество - <%= @profitlist.count %></b>
+<table>
+  <tr>
+    <td class=hblist><%= sortable "name", "Название", { :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist><%= sortable "speed", "Скорость", { :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist><%= sortable "pay", "Ежем. платёж", { :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist><%= sortable "dogovor_num", "Номер договора", { :search => params[:search], :flag => params[:flag] }%></td>
+    <td class=hblist><%= sortable "dogovor_date", "Дата договора", { :search => params[:search], :flag => params[:flag] }%></td>
+  </tr>
+
+<% @profitlist.each do |client| %>
+  <tr class="<%= cycle :sclist, :dclist %>">
+    <td><%= link_to client.name, "/tasks/?cl_id=#{client.cl_id}" %></td>
+    <td align=center><%= client.speed %> Kb/S</td>
+    <td align=center><%= client.pay %> руб.</td>
+    <td align=center><%= client.dogovor_num %></td>
+    <td align=center><%= client.dogovor_date %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= will_paginate @profitlist %>
+<% end %>
